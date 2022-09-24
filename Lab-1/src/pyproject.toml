@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "lab1-project"
+version = "0.1.0"
+description = "Sorting  Lab"
+authors = ["Andrey Malov <ndrmlv@ya.ru>"]
+readme = "README.md"
+packages = [{include = "lab1_project"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.23.3"
+matplotlib = "^3.6.0"
+
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^1.7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
