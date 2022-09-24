@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""GUI application shows how many time is need to sort lists of numbers.
+
+Usage: gui.py
+"""
+
 from typing import Callable
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,7 +36,7 @@ def time_for_sort(input: list[list], strategy_sort: Callable[[list], list]) -> l
     return result
 
 
-def main() -> None:
+if __name__ == '__main__':
     size = 1000
     x = np.linspace(0, size, size)
 
@@ -50,7 +55,3 @@ def main() -> None:
     ax_selection.legend(loc=4)
     ax_insertion.legend(loc=5)
     plt.show()
-
-
-if __name__ == '__main__':
-    main()
