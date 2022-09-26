@@ -13,19 +13,12 @@ from utils import execution_time_seconds
 from sorts import selection_sort, insertion_sort
 
 
-def generate_random_sequences(size, step) -> list[list]:
-    """
-    >>> generate_random_sequences(100, 12)
-    [
-        [12 random values from -size to size], 
-        [24 random values from -size to size],
-        ...,
-        [96 random values from -size to size]
-    ]
-    """
+def generate_random_sequences(input, step=1) -> list[list]:
     result: list[list] = []
     for i in range(step, size, step):
-        result.append(sample(range(-size, size), i))
+        temp = input[0:i]
+        np.random.shuffle(temp)
+        result.append(temp)
     return result
 
 
@@ -37,21 +30,19 @@ def time_for_sort(input: list[list], strategy_sort: Callable[[list], list]) -> l
 
 
 if __name__ == '__main__':
-    size = 1000
-    x = np.linspace(0, size, size)
+    size = 1024
+    x = np.linspace(0, size, size-1)
 
-    data: list[list] = generate_random_sequences(size+1, 1)
-    time_selection: list[float] = time_for_sort(data, selection_sort)
-    time_insertion: list[float] = time_for_sort(data, insertion_sort)
-    time_built_in: list[float] = time_for_sort(data, sorted)
+    time_selection = time_for_sort(generate_random_sequences(x.copy()), selection_sort)
+    time_insertion = time_for_sort(generate_random_sequences(x.copy()), insertion_sort)
+    time_built_in = time_for_sort(generate_random_sequences(x.copy()), sorted)
 
-    _, ax_built_in = plt.subplots()
-    ax_selection = ax_built_in.twinx()
-    ax_insertion = ax_built_in.twinx()
-    ax_built_in.plot(x, time_built_in, color='blue', label='sorted()')
-    ax_selection.plot(x, time_selection, color='red', label='selection()')
-    ax_insertion.plot(x, time_insertion, color='green', label='insertion()')
-    ax_built_in.legend(loc=2)
-    ax_selection.legend(loc=4)
-    ax_insertion.legend(loc=5)
+    plt.plot(x, time_built_in, label='built-in sorted()')
+    plt.plot(x, time_insertion, label='insertion sort')
+    plt.plot(x, time_selection, label='selection sort')
+    plt.grid(True)
+    plt.xlabel('elements')
+    plt.ylabel('time')
+    plt.legend(title='Sorts:')
+    plt.title('Sorts comparsion')
     plt.show()
