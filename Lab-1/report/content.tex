@@ -181,12 +181,48 @@ $$\sum
 \end{itemize}
 
 \section{Тестирование программы}
-Тестирование программы со скриншотами: Описание тестового случая; Скриншот с подписью.
 
-Ссылка на репозиторий с программой, python notebook (виртуальный диск);
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[scale=0.5]{Figure_1}
+        \caption{Результат сортировки. На графике 3 функции: встроенная в Python
+            сортировка, сортировка вставками и сортировка выбором}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[scale=0.5]{Figure_2}
+        \caption{Результат сортировки. На графике 2 функции: встроенная в Python
+            сортировка и сортировка вставками}
+    \end{center}
+\end{figure}
+
+По графикам видно, что встроенная сортировка \verb|Python| более стабильна.
+Нет такого большого разброса по времени.
+
+Теперь демонстрация записи в файл:
+
+\begin{verbatim}
+    # генерация файла со случайным набором чисел
+    $ ./random_number.py -10 10 5 > data
+    # ввод файла с данными в программу сортировки чисел и вывод отсортированных
+    # данных
+    $ cat data | ./selection_sort.py > selection_data
+    $ cat data | ./insertion_sort.py > insertion_data
+    # расчёт времени работы сортировки
+    $ time ( ./insertion_sort.py < data > insertion_data )
+    ( ./insertion_sort.py < data > insertion_data; ) 0.05s user 0.01s system
+    173% cpu 0.037 total
+\end{verbatim}
+
+Ссылка на репозиторий с программами и отчёт написанный с помощью \LaTeX:
+\url{https://github.com/andreymlv/tstu-computation-theory}
 
 \section*{Заключение}
-Краткий вывод по работе: описание реализованной программы и её функций.
+Реализовали две квадратичные сортировки. Из графиков видно, что встроенная
+функция сортировки \verb|Python| работает в разы стабильнее и эффективнее по
+времени.
 
 Установили \verb|Python 3.10.6|, среду разработки \verb|VSCode|, библиотеку
 \verb|Dear PyGui| для графического интерфейса, а так же использовали сторонний
