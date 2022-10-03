@@ -18,11 +18,11 @@ from sys import argv
 from utils import print_list_stdout
 
 if __name__ == '__main__':
-    if (len(argv) != 4):
+    if len(argv) != 4:
         raise RuntimeError("Usage: " + argv[0] + " min max count")
-    min: int = int(argv[1])
-    max: int = int(argv[2])
+    from_min: int = int(argv[1])
+    to_max: int = int(argv[2])
     count: int = int(argv[3])
-    assert min <= max
-    assert count > 0 and count <= max - min
-    print_list_stdout(sample(range(min, max), count))
+    assert from_min <= to_max
+    assert 0 < count <= to_max - from_min
+    print_list_stdout(sample(range(from_min, to_max), count))

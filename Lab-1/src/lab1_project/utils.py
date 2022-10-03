@@ -4,10 +4,10 @@ from typing import Callable
 
 
 def read_list_stdin() -> list[int]:
-    input: list[int] = []
+    data: list[int] = []
     for line in stdin:
-        input.append(int(line))
-    return input
+        data.append(int(line))
+    return data
 
 
 def print_list_stdout(sequence: list) -> None:

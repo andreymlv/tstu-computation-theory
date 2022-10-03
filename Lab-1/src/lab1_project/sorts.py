@@ -1,26 +1,4 @@
 def insertion_sort(collection: list) -> list:
-    """A pure Python implementation of the insertion sort algorithm
-    :param collection: some mutable ordered collection with heterogeneous
-    comparable items inside
-    :return: the same collection ordered by ascending
-    Examples:
-    >>> insertion_sort([0, 5, 3, 2, 2])
-    [0, 2, 2, 3, 5]
-    >>> insertion_sort([]) == sorted([])
-    True
-    >>> insertion_sort([-2, -5, -45]) == sorted([-2, -5, -45])
-    True
-    >>> insertion_sort(['d', 'a', 'b', 'e', 'c']) == sorted(['d', 'a', 'b', 'e', 'c'])
-    True
-    >>> import random
-    >>> collection = random.sample(range(-50, 50), 100)
-    >>> insertion_sort(collection) == sorted(collection)
-    True
-    >>> import string
-    >>> collection = random.choices(string.ascii_letters + string.digits, k=100)
-    >>> insertion_sort(collection) == sorted(collection)
-    True
-    """
     for insert_index, insert_value in enumerate(collection[1:]):
         temp_index = insert_index
         while insert_index >= 0 and insert_value < collection[insert_index]:
@@ -32,18 +10,6 @@ def insertion_sort(collection: list) -> list:
 
 
 def selection_sort(collection: list) -> list:
-    """Pure implementation of the selection sort algorithm in Python
-    :param collection: some mutable ordered collection with heterogeneous
-    comparable items inside
-    :return: the same collection ordered by ascending
-    Examples:
-    >>> selection_sort([0, 5, 3, 2, 2])
-    [0, 2, 2, 3, 5]
-    >>> selection_sort([])
-    []
-    >>> selection_sort([-2, -5, -45])
-    [-45, -5, -2]
-    """
     length = len(collection)
     for i in range(length - 1):
         least = i
