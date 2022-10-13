@@ -2,10 +2,14 @@ import os
 
 
 def dimensions() -> tuple[int, int]:
+    """Calls OS-specific functions to get dimensions of terminal.
+
+    :return: tuple that contains width and height dimensions of terminal.
+    """
     width = os.popen('tput cols', 'r').readline()
     height = os.popen('tput lines', 'r').readline()
     return int(width), int(height)
 
 
-def clear_screen(lines: int) -> None:
-    print('\n' * lines)
+def clear_screen() -> None:
+    os.system('cls||clear')

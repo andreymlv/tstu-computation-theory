@@ -1,31 +1,35 @@
 from typing import Callable
 
-from units.unit import Unit
+from object import Object
 
 
 class Field:
     edge = '#'
 
-    def __init__(self, width: int, height: int, max_weaponed: int, units: list[Unit]):
+    def __init__(self, width: int, height: int, max_weaponed: int, objects: list[Object]):
         self.width = width
         self.height = height
-        self.max_objects = max_weaponed
-        self.units = units
+        # TODO: 'maximum weaponed' should be controlled by Base or Game class
+        self.max_weaponed = max_weaponed
+        self.objects = objects
 
-    def render(self):
-        print(self.edge * (self.width + 2))
+    def render(self) -> str:
+        # TODO: Return colored 2D list and render it in the `Game` class
+        result = ''
+        result += self.edge * (self.width + 2) + '\n'
         for y in range(self.height):
-            print(self.edge, end='')
-            is_unit_on_line: Callable[[Unit], bool] = lambda u: u.position.y == y
-            units_on_line: list[Unit] = list(filter(is_unit_on_line, self.units))
-            if units_on_line:
+            result += self.edge
+            is_object_on_line: Callable[[Object], bool] = lambda u: u.position.y == y
+            objects_on_line: list[Object] = list(filter(is_object_on_line, self.objects))
+            if objects_on_line:
                 for x in range(self.width):
-                    for unit in units_on_line:
-                        if unit.position.x == x:
-                            print(unit.draw(), end='')
+                    for obj in objects_on_line:
+                        if obj.position.x == x:
+                            result += obj.draw()
                         else:
-                            print(' ', end='')
+                            result += ' '
             else:
-                print(' ' * self.width, end='')
-            print(self.edge)
-        print(self.edge * (self.width + 2))
+                result += ' ' * self.width
+            result += self.edge + '\n'
+        result += self.edge * (self.width + 2) + '\n'
+        return result
