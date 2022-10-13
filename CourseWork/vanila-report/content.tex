@@ -1,0 +1,83 @@
+\section*{Постановка задачи}
+Необходимо сделать нормальный шаблон для отчётов в Политехе. Структура отчётов может быть разной, зависит от требования преподавателя, поэтому файл content.tex отдельно выделен от всех других в шаблоне и не делится на подчасти.
+\addcontentsline{toc}{section}{Постановка задачи}
+
+\newpage
+\section{Заполнение шаблона}
+\begin{itemize}
+	\item Изменить \textbf{config.tex}: имя студента, название предмета и пр. параметры указаны именно там
+	\item Заполнить \textbf{content.tex} - файл, который будет содержать весь текст отчёта, от вступления до заключения.
+	\item Добавить используемую литературу (если есть) в \textbf{refs.bib}. Для удобного поиска источников можно воспользоваться Google Books. Использованные источники можно указывать с помощью команды \textbf{\\cite\{name\_of\_ref\}}
+\end{itemize}
+Далее представлены различные примеры.
+
+\section{Теоретическая информация}
+bash \cite{knuth:1984}
+
+\section{Ход выполнения работы}
+
+\subsection{Список}
+
+\begin{itemize}
+	\item первый элемент списка
+	\item второй элемент списка
+\end{itemize}
+
+\subsection{Картинка}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{sample}
+		\caption{название картинки}
+		\label{pic:pic_name}
+	\end{center}
+\end{figure}
+
+Текст без отступа (следует за вставкой)
+
+Новый параграф
+
+\noindent Новый параграф с принудительно выключенным отступом
+
+
+\subsection{Таблицы}
+
+\begin{table}[H]
+	\caption{Одна таблица}
+	\begin{center}
+		\begin{tabular*}{0.4\textwidth}{@{\extracolsep{\fill} } lcc}
+			\toprule
+			Element & First & Second \\
+			\midrule
+			One       & -    & -    \\
+			Two       & -    & -    \\
+			Three     & -    & -    \\
+			Four      & -    & -    \\
+			\bottomrule
+		\end{tabular*}
+		\label{tabular:tab_examp_1}
+	\end{center}
+
+	\caption{Другая таблица}
+	\begin{center}
+		\begin{tabular}{|l|c|r|}
+			\hline
+			top left & top center & top right \\ \hline
+			bot left & bot center & bot right \\ \hline
+		\end{tabular}
+		\label{tabular:tab_examp_2}
+	\end{center}
+\end{table}
+
+\subsection{Листинг}
+\begin{code}
+	\inputminted[breaklines=true, xleftmargin=1em, linenos, frame=single, framesep=10pt, fontsize=\footnotesize, firstline=1, lastline=33]{haskell}{src/Code.hs}
+	\caption{Code.hs – функциональный код в массы!}
+\end{code}
+
+\newpage
+\section*{Заключение}
+\LaTeX\ удобен для создания отчётов, так как сам следит за нумерацией таблиц, рисунков, листингов и отсылок к ним (так, например, здесь всегда будет указан номер рисунка "sample" не зависимо от того, какой он (1,2 или другой) - это рисунок \ref{pic:pic_name}). Не менее важно что весь документ оформлен в едином стиле, а исходные материалы подключаются к отчёту, а не хранятся в нём. Всё это позволяет легко получить качественный отчёт без дополнительных трат на его офрмление.
+
+Исключения, пожалуй, составляют таблицы, так как их значительно сложнее создавать кодом, нежели в графическом редакторе. Но здесь никто не запрещает использовать визуальные средства создания таблиц для \LaTeX\ .
+\addcontentsline{toc}{section}{Заключение}

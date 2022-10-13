@@ -1,0 +1,52 @@
+% Make PDF files searchable and copyable
+\usepackage{cmap}
+
+% Russian-specific packages
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+
+% Hyphenation rules
+\usepackage{hyphenat}
+\hyphenation{ма-те-ма-ти-ка вос-ста-нав-ли-вать}
+
+% Indent first paragraph after section header
+\usepackage{indentfirst}
+
+% Page size and Margins
+\usepackage{geometry}
+\geometry{top=2cm}
+\geometry{bottom=2cm}
+\geometry{left=2cm}
+\geometry{right=2cm}
+\geometry{bindingoffset=0cm}
+
+% Clickable links
+\usepackage{hyperref}
+
+% Highlighted source code for LaTeX
+\usepackage{minted}
+\usemintedstyle{colorful}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+
+% Enhanced support for graphics
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+% Localization
+\addto\captionsrussian{
+	\renewcommand{\figurename}{Рисунок}
+    \renewcommand{\refname}{Перечень использованных источников}
+	\renewcommand{\partname}{Глава}
+	\renewcommand{\contentsname}{\centerline{Содержание}}
+	\renewcommand{\listingscaption}{Листинг}
+}
+
+% Publication quality tables in LaTeX
+\usepackage{booktabs}
+
+% Customizing captions in floating environments
+\usepackage{caption}
+
+% AMS mathematical facilities for LaTeX
+\usepackage{amsmath}
