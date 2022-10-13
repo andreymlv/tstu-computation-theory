@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "lab-2"
+name = "Lab-2"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Andrey Malov <ndrmlv@ya.ru>"]
 readme = "README.md"
-packages = [{include = "lab_2"}]
+packages = [{ include = "lab_2" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-termcolor = "^2.0.1"
+colorama = "^0.4.5"
 
 [build-system]
 requires = ["poetry-core"]
