@@ -1,5 +1,3 @@
-from typing import Self
-
 from position import Position
 from units.unit import Unit
 from weapon.weaponless import Weaponless
@@ -17,7 +15,7 @@ class Base(Unit):
     def draw(self) -> str:
         return super().draw() + "^"
 
-    def produce(self, warrior: Unit) -> Self:
+    def produce(self, warrior: Unit):
         if self.can_produce:
             can_produce: bool = len(self.warriors) + 1 < self.maximum_count_warriors
             return Base(self.position, self.hp, can_produce, self.maximum_count_warriors, self.warriors + [warrior])
