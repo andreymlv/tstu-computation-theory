@@ -14,3 +14,6 @@ class Unit(Object):
 
     def draw(self) -> str:
         return super().draw() + "U"
+
+    def is_dead(self) -> bool:
+        return self.hp <= 0

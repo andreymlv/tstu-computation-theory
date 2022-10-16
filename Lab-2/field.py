@@ -1,6 +1,7 @@
 from typing import Callable
 
 from object import Object
+from position import Position
 
 
 class Field:
@@ -12,6 +13,9 @@ class Field:
         # TODO: 'maximum weaponed' should be controlled by Base or Game class
         self.max_weaponed = max_weaponed
         self.objects = objects
+
+    def is_possible_move(self, position: Position) -> bool:
+        return position.x > self.width or position.y > self.height or position.x < 0 or position.y < 0
 
     def render(self) -> str:
         # TODO: Return colored 2D list and render it in the `Game` class

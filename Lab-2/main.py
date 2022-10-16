@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 
-"""This is a console game.
-"""
-
 import logging
 import math
 
 import colorama
 
 import utils
+from cursor import Cursor
 from field import Field
+from game import Game
+from object import Object
 from position import Position
-from units.squad.range import Range
-from weapon.range.bow import Bow
+from units.unit import Unit
 
 if __name__ == '__main__':
     logging.basicConfig(filename='debug.log', filemode='w', format='%(asctime)s %(message)s',
@@ -26,21 +25,21 @@ if __name__ == '__main__':
     dims = utils.dimensions()
     width: int = dims[0] - 8
     height: int = dims[1] - 8
-
-    # init_landscape: list[Unit] = []
-    # init_neutrals: list[Unit] = []
-    # init_units: list[Unit] = [init_base, init_landscape, init_neutrals]
+    init_landscapes: list[Unit] = []
+    init_units: list[Unit] = []
+    init_objects: list[Object] = [None, *init_landscapes, *init_units]
     max_weaponed: int = math.floor(width * height * 0.5)
-    init_field: Field = Field(width, height, max_weaponed, [Range(Position(5, 5), Bow())])
-    # game_state: Game = Game(init_field, init_units)
+    init_field: Field = Field(width, height, max_weaponed, init_objects)
+    game_state: Game = Game(init_field, None, Cursor(Position(0, 0)), False)
     print(init_field.render())
     print(f'Please choose your base location on your field {width}x{height}.')
     logging.info('Game is initialized.')
 
-    # while not game_state.is_over():
-    #     utils.clear_screen()
-    #     game_state.render()
-    #     utils.poll()
-    #     game_state = Game()
+    while not game_state.is_over():
+        utils.clear_screen()
+        game_state.render()
+        game_state = game_state.next().poll()
 
     logging.info('Game is over.')
+    colorama.deinit()
+    logging.info('Colors are disabled.')
