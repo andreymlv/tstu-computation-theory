@@ -12,4 +12,15 @@ def dimensions() -> tuple[int, int]:
 
 
 def clear_screen() -> None:
-    os.system('cls||clear')
+    os.system('clear')
+
+
+def flush_input():
+    try:
+        import msvcrt
+        while msvcrt.kbhit():
+            msvcrt.getch()
+    except ImportError:
+        import sys
+        import termios
+        termios.tcflush(sys.stdin, termios.TCIOFLUSH)

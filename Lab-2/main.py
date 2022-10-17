@@ -27,18 +27,17 @@ if __name__ == '__main__':
     height: int = dims[1] - 8
     init_landscapes: list[Unit] = []
     init_units: list[Unit] = []
-    init_objects: list[Object] = [None, *init_landscapes, *init_units]
+    init_objects: list[Object] = [Cursor(Position(9, 9))]
     max_weaponed: int = math.floor(width * height * 0.5)
     init_field: Field = Field(width, height, max_weaponed, init_objects)
-    game_state: Game = Game(init_field, None, Cursor(Position(0, 0)), False)
-    print(init_field.render())
+    game_state: Game = Game(init_field, None, Cursor(Position(9, 9)), False)
     print(f'Please choose your base location on your field {width}x{height}.')
     logging.info('Game is initialized.')
 
     while not game_state.is_over():
         utils.clear_screen()
         game_state.render()
-        game_state = game_state.next().poll()
+        game_state = game_state.poll()
 
     logging.info('Game is over.')
     colorama.deinit()
