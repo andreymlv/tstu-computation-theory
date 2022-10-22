@@ -15,7 +15,7 @@ class Field:
         self.objects = objects
 
     def is_possible_move(self, position: Position) -> bool:
-        return position.x > self.width or position.y > self.height or position.x < 0 or position.y < 0
+        return self.width > position.x >= 0 and self.height > position.y >= 0
 
     def render(self) -> str:
         # TODO: Return colored 2D list and render it in the `Game` class

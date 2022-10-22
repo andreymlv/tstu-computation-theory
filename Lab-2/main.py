@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/sudo python3
 
 import logging
 import math
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     print(colorama.Fore.RED + 'Welcome to the game!' + colorama.Style.RESET_ALL)
     input('To start the game press any key')
     utils.clear_screen()
-    dims = utils.dimensions()
+    dims: tuple[int, int] = utils.dimensions()
     width: int = dims[0] - 8
     height: int = dims[1] - 8
     init_landscapes: list[Unit] = []
