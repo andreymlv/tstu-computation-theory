@@ -19,18 +19,19 @@ if __name__ == '__main__':
     logging.info('Logging is enabled.')
     colorama.init()
     logging.info('Colors are enabled.')
+    utils.clear_screen()
     print(colorama.Fore.RED + 'Welcome to the game!' + colorama.Style.RESET_ALL)
     input('To start the game press any key')
     utils.clear_screen()
     dims: tuple[int, int] = utils.dimensions()
-    width: int = dims[0] - 8
-    height: int = dims[1] - 8
+    width: int = dims[0] // 2
+    height: int = dims[1] // 2
     init_landscapes: list[Unit] = []
     init_units: list[Unit] = []
-    init_objects: list[Object] = [Cursor(Position(9, 9))]
+    init_objects: list[Object] = [Cursor(Position(0, 0))]
     max_weaponed: int = math.floor(width * height * 0.5)
     init_field: Field = Field(width, height, max_weaponed, init_objects)
-    game_state: Game = Game(init_field, None, Cursor(Position(9, 9)), False)
+    game_state: Game = Game(init_field, None, Cursor(Position(0, 0)), False)
     print(f'Please choose your base location on your field {width}x{height}.')
     logging.info('Game is initialized.')
 
