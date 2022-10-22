@@ -7,4 +7,4 @@ class Cursor(Object):
         super().__init__(position)
 
     def draw(self) -> str:
-        return '+'
+        return "+"

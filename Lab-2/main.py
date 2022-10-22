@@ -13,15 +13,20 @@ from object import Object
 from position import Position
 from units.unit import Unit
 
-if __name__ == '__main__':
-    logging.basicConfig(filename='debug.log', filemode='w', format='%(asctime)s %(message)s',
-                        encoding='utf-8', level=logging.DEBUG)
-    logging.info('Logging is enabled.')
+if __name__ == "__main__":
+    logging.basicConfig(
+        filename="debug.log",
+        filemode="w",
+        format="%(asctime)s %(message)s",
+        encoding="utf-8",
+        level=logging.DEBUG,
+    )
+    logging.info("Logging is enabled.")
     colorama.init()
-    logging.info('Colors are enabled.')
+    logging.info("Colors are enabled.")
     utils.clear_screen()
-    print(colorama.Fore.RED + 'Welcome to the game!' + colorama.Style.RESET_ALL)
-    input('To start the game press any key')
+    print(colorama.Fore.RED + "Welcome to the game!" + colorama.Style.RESET_ALL)
+    input("To start the game press any key")
     utils.clear_screen()
     dims: tuple[int, int] = utils.dimensions()
     width: int = dims[0] // 2
@@ -32,14 +37,14 @@ if __name__ == '__main__':
     max_weaponed: int = math.floor(width * height * 0.5)
     init_field: Field = Field(width, height, max_weaponed, init_objects)
     game_state: Game = Game(init_field, None, Cursor(Position(0, 0)), False)
-    print(f'Please choose your base location on your field {width}x{height}.')
-    logging.info('Game is initialized.')
+    print(f"Please choose your base location on your field {width}x{height}.")
+    logging.info("Game is initialized.")
 
     while not game_state.is_over():
         utils.clear_screen()
         game_state.render()
         game_state = game_state.poll()
 
-    logging.info('Game is over.')
+    logging.info("Game is over.")
     colorama.deinit()
-    logging.info('Colors are disabled.')
+    logging.info("Colors are disabled.")

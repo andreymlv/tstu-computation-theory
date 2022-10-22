@@ -8,7 +8,6 @@ from position import Position
 
 
 class Game:
-
     def __init__(self, field: Field, base: Base, cursor: Cursor, quit_required: bool):
         self.quit_required = quit_required
         self.cursor = cursor
@@ -22,23 +21,34 @@ class Game:
         event = keyboard.read_event(True)
         if event.event_type == keyboard.KEY_DOWN:
             match event.name:
-                case 'w' | 'up' | 'k':
+                case "w" | "up" | "k":
                     move = Position(self.cursor.position.x, self.cursor.position.y - 1)
-                case 'a' | 'left' | 'h':
+                case "a" | "left" | "h":
                     move = Position(self.cursor.position.x - 1, self.cursor.position.y)
-                case 's' | 'down' | 'j':
+                case "s" | "down" | "j":
                     move = Position(self.cursor.position.x, self.cursor.position.y + 1)
-                case 'd' | 'right' | 'l':
+                case "d" | "right" | "l":
                     move = Position(self.cursor.position.x + 1, self.cursor.position.y)
-                case 'q':
+                case "space":
+                    for object in self.field.objects:
+                        if object.position == self.cursor.position:
+                            pass
+                case "q":
+                    # TODO: ask to save.
                     quit_required = True
                 case _:
                     pass
         utils.flush_input()
         if self.field.is_possible_move(move):
             cursor = Cursor(move)
-        return Game(Field(self.field.width, self.field.height, self.field.max_weaponed, [cursor]), self.base, cursor,
-                    quit_required)
+        return Game(
+            Field(
+                self.field.width, self.field.height, self.field.max_weaponed, [cursor]
+            ),
+            self.base,
+            cursor,
+            quit_required,
+        )
 
     def render(self):
         print(self.field.render())

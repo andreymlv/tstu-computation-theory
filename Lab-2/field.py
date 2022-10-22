@@ -5,9 +5,11 @@ from position import Position
 
 
 class Field:
-    edge = '#'
+    edge = "#"
 
-    def __init__(self, width: int, height: int, max_weaponed: int, objects: list[Object]):
+    def __init__(
+        self, width: int, height: int, max_weaponed: int, objects: list[Object]
+    ):
         self.width = width
         self.height = height
         # TODO: 'maximum weaponed' should be controlled by Base or Game class
@@ -19,21 +21,23 @@ class Field:
 
     def render(self) -> str:
         # TODO: Return colored 2D list and render it in the `Game` class
-        result = ''
-        result += self.edge * (self.width + 2) + '\n'
+        result = ""
+        result += self.edge * (self.width + 2) + "\n"
         for y in range(self.height):
             result += self.edge
             is_object_on_line: Callable[[Object], bool] = lambda u: u.position.y == y
-            objects_on_line: list[Object] = list(filter(is_object_on_line, self.objects))
+            objects_on_line: list[Object] = list(
+                filter(is_object_on_line, self.objects)
+            )
             if objects_on_line:
                 for x in range(self.width):
                     for obj in objects_on_line:
                         if obj.position.x == x:
                             result += obj.draw()
                         else:
-                            result += ' '
+                            result += " "
             else:
-                result += ' ' * self.width
-            result += self.edge + '\n'
-        result += self.edge * (self.width + 2) + '\n'
+                result += " " * self.width
+            result += self.edge + "\n"
+        result += self.edge * (self.width + 2) + "\n"
         return result

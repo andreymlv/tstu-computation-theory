@@ -4,7 +4,15 @@ from weapon.weapon import Weapon
 
 
 class Unit(Object):
-    def __init__(self, position: Position, hp: int, armor: int, speed: int, damage: int, weapon: Weapon):
+    def __init__(
+        self,
+        position: Position,
+        hp: int,
+        armor: int,
+        speed: int,
+        damage: int,
+        weapon: Weapon,
+    ):
         super().__init__(position)
         self.hp = hp
         self.armor = armor
