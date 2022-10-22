@@ -12,7 +12,7 @@ def dimensions() -> tuple[int, int]:
 
 
 def clear_screen() -> None:
-    os.system('clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def flush_input():
