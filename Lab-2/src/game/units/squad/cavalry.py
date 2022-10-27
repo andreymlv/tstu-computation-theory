@@ -1,5 +1,5 @@
-from combatable import Combatable
-from unit import Unit
+from game.combatable import Combatable
+from game.units.unit import Unit
 
 
 class Cavalry(Unit, Combatable):

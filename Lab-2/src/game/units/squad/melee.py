@@ -1,6 +1,6 @@
-from position import Position
-from unit import Unit
-from weapons.melee_weapon import MeleeWeapon
+from game.position import Position
+from game.units.unit import Unit
+from game.weapons.melee_weapon import MeleeWeapon
 
 
 class Melee(Unit):

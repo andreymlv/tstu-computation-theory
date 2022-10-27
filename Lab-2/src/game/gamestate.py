@@ -4,16 +4,16 @@ from typing import Self
 import keyboard
 
 import utils
-from base import Base
-from cell import Cell
-from cursor import Cursor
-from field import Field
+from game.cell import Cell
+from game.cursor import Cursor
+from game.field import Field
 from position import Position
+from units.base import Base
 from units.blankunit import BlankUnit
 
 
 @dataclass()
-class Game:
+class GameState:
     field: Field
     base: Base
     cursor: Position
@@ -57,13 +57,13 @@ class Game:
                 BlankUnit(),
                 self.field.cells[move.x][move.y].landscape,
             )
-            return Game(
+            return GameState(
                 Field(self.field.width, self.field.height, self.field.cells),
                 self.base,
                 move,
                 quit_required,
             )
-        return Game(
+        return GameState(
             Field(self.field.width, self.field.height, self.field.cells),
             self.base,
             cursor,
@@ -84,4 +84,4 @@ class Game:
         return self.quit_required
 
     def next(self) -> Self:
-        return Game(self.field, self.base, self.cursor, self.quit_required)
+        return GameState(self.field, self.base, self.cursor, self.quit_required)

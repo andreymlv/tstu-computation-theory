@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from drawable import Drawable
+from game.drawable import Drawable
 
 
 @dataclass()

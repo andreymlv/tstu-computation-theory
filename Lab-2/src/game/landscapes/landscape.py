@@ -1,5 +1,5 @@
-from drawable import Drawable
-from unit import Unit
+from game.gamestate import Drawable
+from game.units.unit import Unit
 
 
 class Landscape(Drawable):

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from weapon import Weapon
+from weapons.weapon import Weapon
 
 
 @dataclass()

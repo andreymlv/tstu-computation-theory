@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from unit import Unit
+from game.units.unit import Unit
 
 
 @dataclass()

@@ -1,4 +1,4 @@
-from unit import Unit
+from game.units.unit import Unit
 
 
 class Animal(Unit):

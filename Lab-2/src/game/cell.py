@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 from cursor import Cursor
 from drawable import Drawable
-from landscape import Landscape
+from landscapes.landscape import Landscape
 from position import Position
-from unit import Unit
+from units.unit import Unit
 from units.blankunit import BlankUnit
 
 

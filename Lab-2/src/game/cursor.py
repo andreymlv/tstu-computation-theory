@@ -1,4 +1,4 @@
-from unit import Unit
+from units.unit import Unit
 
 
 class Cursor(Unit):

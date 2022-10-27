@@ -4,14 +4,14 @@ import logging
 
 import colorama
 
-from cell import Cell
-from cursor import Cursor
-from field import Field
-from game import Game
-from landscapes.grass import Grass
-from position import Position
-from units.blankunit import BlankUnit
-from utils import clear_screen, dimensions
+from game.cell import Cell
+from game.cursor import Cursor
+from game.field import Field
+from game.gamestate import GameState
+from game.landscapes.grass import Grass
+from game.position import Position
+from game.units.blankunit import BlankUnit
+from game.utils import clear_screen, dimensions
 
 if __name__ == "__main__":
     logging.basicConfig(
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     init_cells[0][0] = Cell(Position(0, 0), BlankUnit(), Cursor(), Grass())
     print(init_cells)
     init_field: Field = Field(width, height, init_cells)
-    game_state: Game = Game(init_field, None, Position(0, 0), False)
+    game_state: GameState = GameState(init_field, None, Position(0, 0), False)
     print(f"Please choose your base location on your field {width}x{height}.")
     logging.info("Game is initialized.")
 

@@ -1,4 +1,4 @@
-from landscape import Landscape
+from game.landscapes.landscape import Landscape
 
 
 class Bush(Landscape):

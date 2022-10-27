@@ -21,14 +21,16 @@ def generate_random_sequences(data, step=1) -> list[list]:
     return result
 
 
-def time_for_sort(data: list[list], strategy_sort: Callable[[list], list]) -> list[float]:
+def time_for_sort(
+    data: list[list], strategy_sort: Callable[[list], list]
+) -> list[float]:
     result: list[float] = []
     for d in data:
         result.append(execution_time_seconds(strategy_sort, d))
     return result
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     size = 1024
     x = np.linspace(0, size, size - 1)
 
@@ -36,12 +38,12 @@ if __name__ == '__main__':
     time_insertion = time_for_sort(generate_random_sequences(x.copy()), insertion_sort)
     time_built_in = time_for_sort(generate_random_sequences(x.copy()), sorted)
 
-    plt.plot(x, time_built_in, label='built-in sorted()')
-    plt.plot(x, time_insertion, label='insertion sort')
+    plt.plot(x, time_built_in, label="built-in sorted()")
+    plt.plot(x, time_insertion, label="insertion sort")
     # plt.plot(x, time_selection, label='selection sort')
     plt.grid(True)
-    plt.xlabel('elements')
-    plt.ylabel('time')
-    plt.legend(title='Sorts:')
-    plt.title('Sorts comparison')
+    plt.xlabel("elements")
+    plt.ylabel("time")
+    plt.legend(title="Sorts:")
+    plt.title("Sorts comparison")
     plt.show()

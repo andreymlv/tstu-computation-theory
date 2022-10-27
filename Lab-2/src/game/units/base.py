@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from combatable import Combatable
+from game.gamestate import Combatable
 from unit import Unit
-from weapons.weaponless import Weaponless
+from game.weapons.weaponless import Weaponless
 
 
 @dataclass()

@@ -1,4 +1,4 @@
-from weapons.melee_weapon import MeleeWeapon
+from game.weapons.melee_weapon import MeleeWeapon
 
 
 class Dagger(MeleeWeapon):

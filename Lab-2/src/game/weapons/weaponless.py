@@ -1,4 +1,4 @@
-from weapon import Weapon
+from game.weapons.weapon import Weapon
 
 
 class Weaponless(Weapon):

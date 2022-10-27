@@ -1,4 +1,4 @@
-from weapons.range_weapon import RangeWeapon
+from game.weapons.range_weapon import RangeWeapon
 
 
 class Crossbow(RangeWeapon):
