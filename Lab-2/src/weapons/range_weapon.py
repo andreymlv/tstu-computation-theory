@@ -1,4 +1,4 @@
-from weapon.weapon import Weapon
+from weapon import Weapon
 
 
 class RangeWeapon(Weapon):

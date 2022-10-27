@@ -1,6 +1,6 @@
 from position import Position
-from units.unit import Unit
-from weapon.range_weapon import RangeWeapon
+from unit import Unit
+from weapons.range_weapon import RangeWeapon
 
 
 class Range(Unit):

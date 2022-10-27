@@ -1,4 +1,4 @@
-from landscape.landscape import Landscape
+from landscape import Landscape
 
 
 class Water(Landscape):

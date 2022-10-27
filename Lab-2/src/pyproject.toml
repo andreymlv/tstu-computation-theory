@@ -4,11 +4,11 @@ version = "0.1.0"
 description = ""
 authors = ["Andrey Malov <ndrmlv@ya.ru>"]
 readme = "README.md"
-packages = [{ include = "lab_2" }]
+packages = []
 
 [tool.poetry.dependencies]
-python = "^3.10"
-colorama = "^0.4.5"
+python = "^3.11"
+colorama = "^0.4.6"
 keyboard = "^0.13.5"
 
 [tool.poetry.group.dev.dependencies]

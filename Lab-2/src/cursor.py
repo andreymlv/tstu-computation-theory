@@ -1,10 +1,6 @@
-from object import Object
-from position import Position
+from unit import Unit
 
 
-class Cursor(Object):
-    def __init__(self, position: Position):
-        super().__init__(position)
-
+class Cursor(Unit):
     def draw(self) -> str:
         return "+"
