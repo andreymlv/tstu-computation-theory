@@ -17,7 +17,7 @@ from random import sample
 from sys import argv
 from utils import print_list_stdout
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if len(argv) != 4:
         raise RuntimeError("Usage: " + argv[0] + " min max count")
     from_min: int = int(argv[1])

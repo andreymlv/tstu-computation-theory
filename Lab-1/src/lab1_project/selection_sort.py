@@ -13,5 +13,5 @@ Selection sort overview: https://en.wikipedia.org/wiki/Selection_sort
 from utils import read_sort_print
 from sorts import selection_sort
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     read_sort_print(selection_sort)
