@@ -385,3 +385,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/tex,windows,linux,macos
 
 *.pdf
+
+refs/
