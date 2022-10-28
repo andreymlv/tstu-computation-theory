@@ -10,7 +10,8 @@ from game.field import Field
 from game.gamestate import GameState
 from game.landscapes.grass import Grass
 from game.position import Position
-from game.units.blankunit import BlankUnit
+from game.units.base import Base
+from game.units.blank import Blank
 from game.utils import clear_screen, dimensions
 
 if __name__ == "__main__":
@@ -29,20 +30,21 @@ if __name__ == "__main__":
     input("To start the game press any key")
     clear_screen()
     dims: tuple[int, int] = dimensions()
-    # width: int = dims[0] // 2
-    # height: int = dims[1] // 2
-    width: int = 5
-    height: int = 3
+    width: int = dims[0] // 2
+    height: int = dims[1] // 2
     init_cells: list[list[Cell]] = [[]] * width
     for x in range(width):
         for y in range(height):
             init_cells[x].append(
-                Cell(Position(x, y), BlankUnit(), BlankUnit(), Grass())
+                Cell(Position(x, y), Blank(), Blank(), Grass())
             )
-    init_cells[0][0] = Cell(Position(0, 0), BlankUnit(), Cursor(), Grass())
-    print(init_cells)
-    init_field: Field = Field(width, height, init_cells)
-    game_state: GameState = GameState(init_field, None, Position(0, 0), False)
+    init_cells[0][0] = Cell(Position(0, 0), Blank(), Cursor(), Grass())
+    game_state: GameState = GameState(
+        Field(width, height, init_cells),
+        Base(True, (width + height) // 2, []),
+        Position(0, 0),
+        False
+    )
     print(f"Please choose your base location on your field {width}x{height}.")
     logging.info("Game is initialized.")
 

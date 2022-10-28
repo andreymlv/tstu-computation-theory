@@ -4,6 +4,6 @@ from game.units.unit import Unit
 
 
 @dataclass()
-class BlankUnit(Unit):
+class Blank(Unit):
     def draw(self) -> str:
         return ""

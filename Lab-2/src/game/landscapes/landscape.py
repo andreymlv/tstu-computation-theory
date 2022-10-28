@@ -1,4 +1,4 @@
-from game.gamestate import Drawable
+from game.drawable import Drawable
 from game.units.unit import Unit
 
 

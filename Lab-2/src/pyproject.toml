@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "Lab-2"
 version = "0.1.0"
-description = ""
+description = "Console game"
 authors = ["Andrey Malov <ndrmlv@ya.ru>"]
 readme = "README.md"
 packages = []

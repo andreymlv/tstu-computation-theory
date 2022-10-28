@@ -3,13 +3,13 @@ from typing import Self
 
 import keyboard
 
-import utils
 from game.cell import Cell
 from game.cursor import Cursor
 from game.field import Field
-from position import Position
-from units.base import Base
-from units.blankunit import BlankUnit
+from game.position import Position
+from game.units.base import Base
+from game.units.blank import Blank
+from game.utils import flush_input
 
 
 @dataclass()
@@ -43,18 +43,18 @@ class GameState:
                     quit_required = True
                 case _:
                     pass
-        utils.flush_input()
-        if self.field.is_possible_move(move):
+        flush_input()
+        if self.field.inside_field(move):
             self.field.cells[cursor.x][cursor.y] = Cell(
                 cursor,
-                BlankUnit(),
-                BlankUnit(),
+                Blank(),
+                Blank(),
                 self.field.cells[cursor.x][cursor.y].landscape,
             )
             self.field.cells[move.x][move.y] = Cell(
                 move,
                 Cursor(),
-                BlankUnit(),
+                Blank(),
                 self.field.cells[move.x][move.y].landscape,
             )
             return GameState(
