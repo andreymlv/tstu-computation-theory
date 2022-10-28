@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from position import Position
+from game.position import Position
 
 
 @dataclass()

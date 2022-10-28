@@ -21,6 +21,7 @@ class Field:
                 self.cells[position_from.x][position_from.y],
             )
             return Field(self.width, self.height, self.cells)
+        return self
 
     def inside_field(self, position: Position) -> bool:
         return self.width > position.x >= 0 and self.height > position.y >= 0
