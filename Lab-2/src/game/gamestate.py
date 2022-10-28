@@ -3,12 +3,9 @@ from typing import Self
 
 import keyboard
 
-from game.cell import Cell
-from game.cursor import Cursor
 from game.field import Field
 from game.position import Position
 from game.units.base import Base
-from game.units.blank import Blank
 from game.utils import flush_input
 
 
@@ -45,26 +42,15 @@ class GameState:
                     pass
         flush_input()
         if self.field.inside_field(move):
-            self.field.cells[cursor.x][cursor.y] = Cell(
-                cursor,
-                Blank(),
-                Blank(),
-                self.field.cells[cursor.x][cursor.y].landscape,
-            )
-            self.field.cells[move.x][move.y] = Cell(
-                move,
-                Cursor(),
-                Blank(),
-                self.field.cells[move.x][move.y].landscape,
-            )
+            field: Field = self.field.swap(cursor, move)
             return GameState(
-                Field(self.field.width, self.field.height, self.field.cells),
+                field,
                 self.base,
                 move,
                 quit_required,
             )
         return GameState(
-            Field(self.field.width, self.field.height, self.field.cells),
+            self.field,
             self.base,
             cursor,
             quit_required,
@@ -73,11 +59,11 @@ class GameState:
     def render(self) -> None:
         field: list[list[str]] = self.field.render()
         to_draw = ""
-        for row in field:
-            for obj in row:
-                to_draw += obj
+        for line in field:
+            for cell in line:
+                to_draw += cell
             to_draw += "\n"
-        print(to_draw)
+        print(to_draw, self.field.cells)
 
     def is_over(self) -> bool:
         # return self.base.is_crushed() or self.quit_required

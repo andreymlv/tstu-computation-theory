@@ -11,14 +11,16 @@ class Field:
     height: int
     cells: list[list[Cell]]
 
-    def move(self, position_from: Position, position_to: Position) -> Self:
+    def swap(self, position_from: Position, position_to: Position) -> Self:
         if self.inside_field(position_from) and self.inside_field(position_to):
-            cells = self.cells
-            cell_from = self.cells[position_from.x][position_from.y]
-            cell_to = self.cells[position_to.x][position_to.y]
-            cells[position_from.x][position_from.y] = cell_to
-            cells[position_to.x][position_to.y] = cell_from
-            return Field(self.width, self.height, cells)
+            (
+                self.cells[position_from.x][position_from.y],
+                self.cells[position_to.x][position_to.y],
+            ) = (
+                self.cells[position_to.x][position_to.y],
+                self.cells[position_from.x][position_from.y],
+            )
+            return Field(self.width, self.height, self.cells)
 
     def inside_field(self, position: Position) -> bool:
         return self.width > position.x >= 0 and self.height > position.y >= 0
