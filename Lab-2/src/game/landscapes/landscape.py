@@ -7,4 +7,4 @@ class Landscape(Drawable):
         return unit.draw() + self.draw()
 
     def draw(self) -> str:
-        raise NotImplemented()
+        raise NotImplementedError()
