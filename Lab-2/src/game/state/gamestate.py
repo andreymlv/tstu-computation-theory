@@ -1,16 +1,14 @@
-from dataclasses import dataclass
-from typing import Self
+from typing import Self, NamedTuple
 
 import keyboard
 
-from game.field import Field
-from game.position import Position
+from game.display.field import Field
+from game.display.position import Position
 from game.units.base import Base
 from game.utils import flush_input
 
 
-@dataclass()
-class GameState:
+class GameState(NamedTuple):
     field: Field
     base: Base
     cursor: Position
@@ -41,7 +39,7 @@ class GameState:
                 case _:
                     pass
         flush_input()
-        if self.field.inside_field(move):
+        if self.field.is_inside(move):
             field: Field = self.field.swap(cursor, move)
             return GameState(
                 field,

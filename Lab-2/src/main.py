@@ -2,14 +2,15 @@
 
 import colorama
 
-from game.cell import Cell
-from game.cursor import Cursor
-from game.field import Field
-from game.gamestate import GameState
+from game.display.screen import Screen
+from game.display.cell import Cell
+from game.display.field import Field
+from game.display.position import Position
 from game.landscapes.grass import Grass
-from game.position import Position
+from game.state.gamestate import GameState
 from game.units.base import Base
 from game.units.blank import Blank
+from game.units.cursor import Cursor
 from game.utils import clear_screen, dimensions
 
 if __name__ == "__main__":
@@ -21,7 +22,7 @@ if __name__ == "__main__":
     dims: tuple[int, int] = dimensions()
     # width: int = dims[0] // 2
     # height: int = dims[1] // 2
-    width: int = 2
+    width: int = 5
     height: int = 2
     init_cells: list[list[Cell]] = []
     for y in range(height):
@@ -31,7 +32,7 @@ if __name__ == "__main__":
             init_cells[y].append(Cell(Position(x, y), Blank(), Blank(), Grass()))
     init_cells[0][0] = Cell(Position(0, 0), Blank(), Cursor(), Grass())
     game_state: GameState = GameState(
-        Field(width, height, init_cells),
+        Field(Screen(width, height), init_cells),
         Base(True, (width + height) // 2, []),
         Position(0, 0),
         False,
@@ -42,6 +43,6 @@ if __name__ == "__main__":
         clear_screen()
         game_state.render()
         game_state = game_state.poll()
-        # game_state = game_state.next()
+        game_state = game_state.next()
 
     colorama.deinit()

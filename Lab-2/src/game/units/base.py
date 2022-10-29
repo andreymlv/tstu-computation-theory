@@ -1,19 +1,20 @@
 from dataclasses import dataclass
 from typing import Self
 
-from game.units.unit import Unit
+from game.interface.combatable import Combatable
+from game.interface.drawable import Drawable
 
 
 @dataclass()
-class Base(Unit):
+class Base(Drawable):
     can_produce: bool
     maximum_count_warriors: int
-    warriors: list[Unit]
+    warriors: list[Combatable]
 
     def draw(self) -> str:
-        return super().draw() + "B"
+        return "B"
 
-    def produce(self, warrior: Unit) -> Self:
+    def produce(self, warrior: Combatable) -> Self:
         if self.can_produce:
             can_produce: bool = len(self.warriors) + 1 < self.maximum_count_warriors
             return Base(

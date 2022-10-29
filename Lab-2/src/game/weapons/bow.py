@@ -2,5 +2,5 @@ from game.weapons.range_weapon import RangeWeapon
 
 
 class Bow(RangeWeapon):
-    def __init__(self):
-        super().__init__(256, 6)
+    durability = 256
+    damage = 6

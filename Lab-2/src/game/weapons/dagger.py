@@ -2,5 +2,5 @@ from game.weapons.melee_weapon import MeleeWeapon
 
 
 class Dagger(MeleeWeapon):
-    def __init__(self):
-        super().__init__(128, 4)
+    durability = 128
+    damage = 4

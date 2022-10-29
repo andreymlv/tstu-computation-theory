@@ -2,5 +2,6 @@ from game.weapons.weapon import Weapon
 
 
 class Weaponless(Weapon):
-    def __init__(self):
-        super().__init__(0, 0, 0)
+    durability = 0
+    damage = 0
+    distance = 0

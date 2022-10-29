@@ -1,6 +1,6 @@
 from game.interface.drawable import Drawable
 
 
-class Blank(Drawable):
+class Cursor(Drawable):
     def draw(self) -> str:
-        return " "
+        return "+"

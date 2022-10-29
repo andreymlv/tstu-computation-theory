@@ -1,10 +1,9 @@
-from dataclasses import dataclass
+from typing import NamedTuple
 
 from game.weapons.weapon import Weapon
 
 
-@dataclass()
-class Combatable:
+class Combatable(NamedTuple):
     hp: int
     armor: int
     damage: int

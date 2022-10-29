@@ -1,7 +1,7 @@
-from game.combatable import Combatable
-from game.units.unit import Unit
+from game.interface.drawable import Drawable
+from game.interface.combatable import Combatable
 
 
-class Cavalry(Unit, Combatable):
+class Cavalry(Drawable, Combatable):
     def draw(self) -> str:
         return "C"

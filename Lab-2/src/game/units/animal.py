@@ -1,6 +1,6 @@
-from game.units.unit import Unit
+from game.interface.drawable import Drawable
 
 
-class Animal(Unit):
+class Animal(Drawable):
     def draw(self) -> str:
         return "a"

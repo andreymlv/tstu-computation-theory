@@ -1,17 +1,16 @@
 from dataclasses import dataclass
 
-from game.cursor import Cursor
-from game.drawable import Drawable
+from game.display.position import Position
+from game.interface.drawable import Drawable
 from game.landscapes.landscape import Landscape
-from game.position import Position
 from game.units.blank import Blank
-from game.units.unit import Unit
+from game.units.cursor import Cursor
 
 
 @dataclass()
 class Cell(Drawable):
     position: Position
-    unit: Unit | Blank
+    unit: Drawable
     cursor: Cursor | Blank
     landscape: Landscape
 

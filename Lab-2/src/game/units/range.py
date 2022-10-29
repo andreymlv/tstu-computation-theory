@@ -1,9 +1,9 @@
-from game.combatable import Combatable
-from game.units.unit import Unit
+from game.interface.drawable import Drawable
+from game.interface.combatable import Combatable
 from game.weapons.range_weapon import RangeWeapon
 
 
-class Range(Unit, Combatable):
+class Range(Drawable, Combatable):
     weapon: RangeWeapon
 
     def draw(self) -> str:

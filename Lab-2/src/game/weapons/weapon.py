@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from typing import NamedTuple
 
 
-@dataclass()
-class Weapon:
+class Weapon(NamedTuple):
     durability: int
     damage: int
     distance: int
