@@ -2,16 +2,16 @@
 
 import colorama
 
-from game.display.screen import Screen
 from game.display.cell import Cell
 from game.display.field import Field
 from game.display.position import Position
+from game.display.screen import Screen
 from game.landscapes.grass import Grass
 from game.state.gamestate import GameState
 from game.units.base import Base
 from game.units.blank import Blank
 from game.units.cursor import Cursor
-from game.utils import clear_screen, dimensions
+from game.utils import clear_screen
 
 if __name__ == "__main__":
     colorama.init()
@@ -19,9 +19,7 @@ if __name__ == "__main__":
     print(colorama.Fore.RED + "Welcome to the game!" + colorama.Style.RESET_ALL)
     input("To start the game press any key")
     clear_screen()
-    dims: tuple[int, int] = dimensions()
-    # width: int = dims[0] // 2
-    # height: int = dims[1] // 2
+    # width, height = map(lambda d: d // 2, dimensions())
     width: int = 5
     height: int = 2
     init_cells: list[list[Cell]] = []

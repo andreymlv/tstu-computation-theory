@@ -40,7 +40,7 @@ class GameState(NamedTuple):
                     pass
         flush_input()
         if self.field.is_inside(move):
-            field: Field = self.field.swap(cursor, move)
+            field: Field = self.field.swap_cell(cursor, move)
             return GameState(
                 field,
                 self.base,

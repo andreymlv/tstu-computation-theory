@@ -1,3 +1,7 @@
-class Drawable:
+from abc import ABC, abstractmethod
+
+
+class Drawable(ABC):
+    @abstractmethod
     def draw(self) -> str:
-        raise NotImplementedError()
+        pass
