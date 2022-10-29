@@ -22,7 +22,9 @@ class Field(NamedTuple):
         return self
 
     def is_inside(self, position: Position) -> bool:
-        return self.screen.width > position.x >= 0 and self.screen.height > position.y >= 0
+        return (
+            self.screen.width > position.x >= 0 and self.screen.height > position.y >= 0
+        )
 
     def render(self) -> list[list[str]]:
         result: list[list[str]] = [[""] * self.screen.width] * self.screen.height
