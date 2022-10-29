@@ -61,7 +61,7 @@ class GameState(NamedTuple):
             for cell in line:
                 to_draw += cell
             to_draw += "\n"
-        print(to_draw, self.field.cells)
+        print(to_draw)
 
     def is_over(self) -> bool:
         # return self.base.is_crushed() or self.quit_required
