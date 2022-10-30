@@ -11,18 +11,20 @@ from game.state.gamestate import GameState
 from game.units.base import Base
 from game.units.blank import Blank
 from game.units.cursor import Cursor
+from game.units.melee import Melee
 from game.utils import clear_screen, dimensions
+from game.weapons.sword import Sword
 
 
-def main():
+def main() -> None:
     colorama.init()
     clear_screen()
     print(colorama.Fore.RED + "Welcome to the game!" + colorama.Style.RESET_ALL)
     input("To start the game press any key")
     clear_screen()
-    # width, height = map(lambda d: d // 2, dimensions())
-    width: int = 5
-    height: int = 2
+    width, height = map(lambda d: d // 2, dimensions())
+    # width: int = 5
+    # height: int = 2
     init_cells: list[list[Cell]] = []
     for x in range(width):
         for y in range(height):
@@ -32,7 +34,7 @@ def main():
     init_cells[0][0] = Cell(Position(0, 0), Blank(), Cursor(), Grass())
     game_state: GameState = GameState(
         Field(Screen(width, height), init_cells),
-        Base(True, (width + height) // 2, []),
+        Base(True, (width + height) // 2, [Melee(10, 8, 8, Sword(128, 8, 1))]),
         Position(0, 0),
         False,
     )
@@ -40,9 +42,9 @@ def main():
 
     while not game_state.is_over():
         clear_screen()
-        game_state.render()
+        game_state.print()
         game_state = game_state.poll()
-        # game_state = game_state.next()
+        game_state = game_state.next()
 
     colorama.deinit()
 

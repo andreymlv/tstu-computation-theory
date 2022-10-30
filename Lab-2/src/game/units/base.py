@@ -21,3 +21,6 @@ class Base(Drawable):
                 can_produce, self.maximum_count_warriors, self.warriors + [warrior]
             )
         return self
+
+    def is_crushed(self) -> bool:
+        return all(map(lambda warrior: warrior.is_dead(), self.warriors))

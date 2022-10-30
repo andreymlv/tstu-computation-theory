@@ -51,20 +51,11 @@ class GameState(NamedTuple):
             quit_required,
         )
 
-    def render(self) -> None:
-        field: list[list[str]] = self.field.render()
-        zipped_field: zip = zip(*field)
-        transposed_field: list[list[str]] = [list(row) for row in zipped_field]
-        to_draw = ""
-        for line in transposed_field:
-            for cell in line:
-                to_draw += cell
-            to_draw += "\n"
-        print(to_draw, self.cursor)
+    def print(self) -> None:
+        print(self.field.render(), self.cursor)
 
     def is_over(self) -> bool:
-        # return self.base.is_crushed() or self.quit_required
-        return self.quit_required
+        return self.base.is_crushed() or self.quit_required
 
     def next(self) -> Self:
         return GameState(self.field, self.base, self.cursor, self.quit_required)

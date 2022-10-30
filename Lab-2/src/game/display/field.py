@@ -13,9 +13,8 @@ class Field(NamedTuple):
 
     def move_cursor(self, position_from: Position, position_to: Position) -> Self:
         if self.is_possible_move(position_from, position_to):
-            if self.cells[position_from.x][position_from.y].cursor is Cursor():
-                self.cells[position_from.x][position_from.y].cursor = Blank()
-                self.cells[position_to.x][position_to.y].cursor = Cursor()
+            self.cells[position_from.x][position_from.y].cursor = Blank()
+            self.cells[position_to.x][position_to.y].cursor = Cursor()
         return self
 
     def move_unit(self, position_from: Position, position_to: Position) -> Self:
@@ -42,11 +41,12 @@ class Field(NamedTuple):
     def is_possible_move(self, position_from: Position, position_to: Position) -> bool:
         return self.is_inside(position_from) and self.is_inside(position_to)
 
-    def render(self) -> list[list[str]]:
-        result: list[list[str]] = []
-        for x in range(self.screen.width):
-            for y in range(self.screen.height):
-                if y == 0:
-                    result.append([])
-                result[x].append(self.cells[x][y].draw())
+    def render(self) -> str:
+        zipped_cells: zip[tuple[Cell]] = zip(*self.cells)
+        transposed_cells: list[list[Cell]] = [list(row) for row in zipped_cells]
+        result: str = ""
+        for line in transposed_cells:
+            for cell in line:
+                result += cell.draw()
+            result += "\n"
         return result
