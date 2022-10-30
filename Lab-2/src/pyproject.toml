@@ -16,6 +16,7 @@ multipledispatch = "^0.6.0"
 black = "^22.10.0"
 flake8 = "^5.0.4"
 mypy = "^0.982"
+aiohttp = "^3.8.3"
 
 [build-system]
 requires = ["poetry-core"]
