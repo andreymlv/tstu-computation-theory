@@ -13,7 +13,8 @@ from game.units.blank import Blank
 from game.units.cursor import Cursor
 from game.utils import clear_screen, dimensions
 
-if __name__ == "__main__":
+
+def main():
     colorama.init()
     clear_screen()
     print(colorama.Fore.RED + "Welcome to the game!" + colorama.Style.RESET_ALL)
@@ -41,6 +42,10 @@ if __name__ == "__main__":
         clear_screen()
         game_state.render()
         game_state = game_state.poll()
-        game_state = game_state.next()
+        # game_state = game_state.next()
 
     colorama.deinit()
+
+
+if __name__ == "__main__":
+    main()

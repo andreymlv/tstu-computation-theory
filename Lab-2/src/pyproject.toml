@@ -1,10 +1,9 @@
 [tool.poetry]
-name = "Lab-2"
+name = "game"
 version = "0.1.0"
 description = "Console game"
 authors = ["Andrey Malov <ndrmlv@ya.ru>"]
 readme = "README.md"
-packages = []
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -21,3 +20,6 @@ aiohttp = "^3.8.3"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+game = "game.game:main"

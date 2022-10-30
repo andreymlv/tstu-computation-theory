@@ -15,10 +15,9 @@ class GameState(NamedTuple):
     quit_required: bool
 
     def poll(self) -> Self:
-        cursor = self.cursor
-        move = self.cursor
-        quit_required = self.quit_required
-        event = keyboard.read_event(True)
+        move: Position = self.cursor
+        quit_required: bool = self.quit_required
+        event: keyboard.KeyboardEvent = keyboard.read_event(True)
         if event.event_type == keyboard.KEY_DOWN:
             match event.name:
                 case "w" | "up" | "k":
@@ -38,7 +37,7 @@ class GameState(NamedTuple):
                     pass
         flush_input()
         if self.field.is_inside(move):
-            field: Field = self.field.swap_cell(cursor, move)
+            field: Field = self.field.move_cursor(self.cursor, move)
             return GameState(
                 field,
                 self.base,
@@ -48,7 +47,7 @@ class GameState(NamedTuple):
         return GameState(
             self.field,
             self.base,
-            cursor,
+            self.cursor,
             quit_required,
         )
 
@@ -61,7 +60,7 @@ class GameState(NamedTuple):
             for cell in line:
                 to_draw += cell
             to_draw += "\n"
-        print(to_draw)
+        print(to_draw, self.cursor)
 
     def is_over(self) -> bool:
         # return self.base.is_crushed() or self.quit_required
