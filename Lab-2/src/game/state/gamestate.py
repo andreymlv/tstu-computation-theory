@@ -30,9 +30,7 @@ class GameState(NamedTuple):
                 case "d" | "right" | "l":
                     move = Position(self.cursor.x + 1, self.cursor.y)
                 case "space":
-                    for line in self.field.cells:
-                        for cell in line:
-                            pass
+                    pass
                 case "q":
                     # TODO: ask to save.
                     quit_required = True
@@ -56,8 +54,10 @@ class GameState(NamedTuple):
 
     def render(self) -> None:
         field: list[list[str]] = self.field.render()
+        zipped_field: zip = zip(*field)
+        transposed_field: list[list[str]] = [list(row) for row in zipped_field]
         to_draw = ""
-        for line in field:
+        for line in transposed_field:
             for cell in line:
                 to_draw += cell
             to_draw += "\n"

@@ -19,9 +19,9 @@ if __name__ == "__main__":
     print(colorama.Fore.RED + "Welcome to the game!" + colorama.Style.RESET_ALL)
     input("To start the game press any key")
     clear_screen()
-    height, width = map(lambda d: d // 2, dimensions())
-    # width: int = 5
-    # height: int = 2
+    # width, height = map(lambda d: d // 2, dimensions())
+    width: int = 5
+    height: int = 2
     init_cells: list[list[Cell]] = []
     for x in range(width):
         for y in range(height):
