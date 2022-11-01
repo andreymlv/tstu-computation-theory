@@ -52,7 +52,11 @@ class GameState(NamedTuple):
         )
 
     def print(self) -> None:
-        print(self.field.render(), self.cursor)
+        print(
+            self.field.render(),
+            self.cursor,
+            self.field.cells[self.cursor.x][self.cursor.y],
+        )
 
     def is_over(self) -> bool:
         return self.base.is_crushed() or self.quit_required

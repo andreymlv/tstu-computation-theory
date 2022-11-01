@@ -1,9 +1,10 @@
+from game.interface.combatable import Combatable
 from game.interface.drawable import Drawable
 
 
 class Landscape(Drawable):
     def combine(self, unit: Drawable) -> str:
-        return unit.draw() + self.draw()
+        return self.draw() + unit.draw()
 
     def draw(self) -> str:
         raise NotImplementedError()

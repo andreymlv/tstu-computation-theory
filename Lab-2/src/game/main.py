@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 
+import math
+import random
 import colorama
 
 from game.display.cell import Cell
 from game.display.field import Field
 from game.display.position import Position
 from game.display.screen import Screen
+from game.landscapes.bush import Bush
 from game.landscapes.grass import Grass
+from game.landscapes.landscape import Landscape
+from game.landscapes.rock import Rock
+from game.landscapes.water import Water
 from game.state.gamestate import GameState
 from game.units.base import Base
 from game.units.blank import Blank
@@ -26,15 +32,29 @@ def main() -> None:
     # width: int = 5
     # height: int = 2
     init_cells: list[list[Cell]] = []
+    random_landscapes: list[Landscape] = [
+        Grass(),
+        Bush(),
+        Rock(),
+        Water(),
+    ]
+    random.shuffle(random_landscapes)
     for x in range(width):
         for y in range(height):
             if y == 0:
                 init_cells.append([])
-            init_cells[x].append(Cell(Position(x, y), Blank(), Blank(), Grass()))
+            init_cells[x].append(
+                Cell(
+                    Position(x, y),
+                    Blank(),
+                    Blank(),
+                    random_landscapes[random.randint(0, len(random_landscapes) - 1)],
+                )
+            )
     init_cells[0][0] = Cell(Position(0, 0), Blank(), Cursor(), Grass())
     game_state: GameState = GameState(
         Field(Screen(width, height), init_cells),
-        Base(True, (width + height) // 2, [Melee(10, 8, 8, Sword(128, 8, 1))]),
+        Base(True, (width + height) // 2, [Melee(10, 8, 4, Sword(128, 8, 1))]),
         Position(0, 0),
         False,
     )

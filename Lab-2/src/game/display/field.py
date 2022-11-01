@@ -1,4 +1,7 @@
+from turtle import color
 from typing import Self, NamedTuple
+
+import colorama
 
 from game.display.cell import Cell
 from game.display.position import Position
@@ -48,5 +51,5 @@ class Field(NamedTuple):
         for line in transposed_cells:
             for cell in line:
                 result += cell.draw()
-            result += "\n"
+            result += colorama.Style.RESET_ALL + "\n"
         return result
