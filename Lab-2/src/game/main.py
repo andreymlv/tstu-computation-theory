@@ -31,30 +31,30 @@ def main() -> None:
     width, height = map(lambda d: d // 2, dimensions())
     # width: int = 5
     # height: int = 2
-    init_cells: list[list[Cell]] = []
-    random_landscapes: list[Landscape] = [
+    cells: list[list[Cell]] = []
+    landscapes: list[Landscape] = [
         Grass(),
         Bush(),
         Rock(),
         Water(),
     ]
-    random.shuffle(random_landscapes)
     for x in range(width):
         for y in range(height):
             if y == 0:
-                init_cells.append([])
-            init_cells[x].append(
+                cells.append([])
+            cells[x].append(
                 Cell(
                     Position(x, y),
                     Blank(),
                     Blank(),
-                    random_landscapes[random.randint(0, len(random_landscapes) - 1)],
+                    landscapes[random.randint(0, len(landscapes) - 1)],
                 )
             )
-    init_cells[0][0] = Cell(Position(0, 0), Blank(), Cursor(), Grass())
+    base: Base = Base(True, (width + height) // 2, [Melee(10, 8, 4, Sword(128, 8, 1))])
+    cells[0][0] = Cell(Position(0, 0), base, Cursor(), Grass())
     game_state: GameState = GameState(
-        Field(Screen(width, height), init_cells),
-        Base(True, (width + height) // 2, [Melee(10, 8, 4, Sword(128, 8, 1))]),
+        Field(Screen(width, height), cells),
+        base,
         Position(0, 0),
         False,
     )

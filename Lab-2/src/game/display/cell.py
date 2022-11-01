@@ -15,4 +15,6 @@ class Cell(Drawable):
     landscape: Landscape
 
     def draw(self) -> str:
-        return self.landscape.combine(self.cursor)
+        return self.landscape.combine(
+            self.unit if self.cursor.draw() == " " else self.cursor
+        )
