@@ -1,8 +1,7 @@
-import pygame
 from abc import ABC, abstractmethod
 
 
-class Drawable(ABC):
+class Printable(ABC):
     @abstractmethod
-    def draw(self) -> pygame.Rect:
+    def print(self) -> str:
         pass

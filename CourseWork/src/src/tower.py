@@ -4,10 +4,11 @@ from dataclasses import dataclass
 
 from drawable import Drawable
 from disk import Disk
+from printable import Printable
 
 
 @dataclass()
-class Tower(Drawable):
+class Tower(Drawable, Printable):
     disks: list[Disk]
 
     def push(self, disk: Disk):

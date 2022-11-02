@@ -2,12 +2,12 @@ from dataclasses import dataclass
 import pygame
 
 from disk import Disk
-from drawable import Drawable
+from printable import Printable
 from tower import Tower
 
 
 @dataclass()
-class Game(Drawable):
+class Game(Printable):
     towers: list[Tower]
     clock: pygame.time.Clock
     window: pygame.surface.Surface
@@ -40,9 +40,6 @@ class Game(Drawable):
         return self.towers[from_tower].can_pop() and self.towers[to_tower].can_push(
             self.towers[from_tower].last()
         )
-
-    def draw(self) -> pygame.Rect:
-        return super().draw()
 
     def print(self) -> str:
         return super().print()
