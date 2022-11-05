@@ -1,13 +1,14 @@
-import pygame
-
 from dataclasses import dataclass
 
-from drawable import Drawable
-from printable import Printable
+import pygame
+
+from src.drawable import Drawable
+from src.printable import Printable
 
 
 @dataclass()
 class Disk(Drawable, Printable):
+    # Should be unsigned
     size: int
 
     def print(self) -> str:

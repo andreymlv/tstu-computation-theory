@@ -1,10 +1,10 @@
-import pygame
-
 from dataclasses import dataclass
 
-from drawable import Drawable
-from disk import Disk
-from printable import Printable
+import pygame
+
+from src.disk import Disk
+from src.drawable import Drawable
+from src.printable import Printable
 
 
 @dataclass()

@@ -1,20 +1,22 @@
 from dataclasses import dataclass
+
 import pygame
 
-from disk import Disk
-from printable import Printable
-from tower import Tower
+from src.disk import Disk
+from src.printable import Printable
+from src.tower import Tower
+
+
+def init() -> None:
+    pygame.display.set_caption("Hanoi Tower")
 
 
 @dataclass()
 class Game(Printable):
     towers: list[Tower]
-    clock: pygame.time.Clock
-    window: pygame.surface.Surface
-    over: bool
-
-    def init(self) -> None:
-        pygame.display.set_caption("Hanoi Tower")
+    clock: pygame.time.Clock = pygame.time.Clock()
+    window: pygame.surface.Surface = pygame.display.set_mode((300, 300))
+    over: bool = False
 
     def poll(self):
         for event in pygame.event.get():

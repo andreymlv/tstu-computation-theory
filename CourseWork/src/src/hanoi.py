@@ -1,5 +1,5 @@
-def hanoi(ndisks: int, startPeg: int = 1, endPeg: int = 3) -> None:
-    if ndisks:
-        hanoi(ndisks - 1, startPeg, 6 - startPeg - endPeg)
-        print(f"Move disk {ndisks} from peg {startPeg} to peg {endPeg}")
-        hanoi(ndisks - 1, 6 - startPeg - endPeg, endPeg)
+def hanoi(disks: int, start_peg: int = 1, end_peg: int = 3) -> None:
+    if disks:
+        hanoi(disks - 1, start_peg, 6 - start_peg - end_peg)
+        print(f"Move disk {disks} from peg {start_peg} to peg {end_peg}")
+        hanoi(disks - 1, 6 - start_peg - end_peg, end_peg)
