@@ -12,7 +12,7 @@ class Base(Drawable):
     warriors: list[Combatable]
 
     def draw(self) -> str:
-        return "B"
+        return " " if self.is_crushed() else "B"
 
     def produce(self, warrior: Combatable) -> Self:
         if self.can_produce:
@@ -23,4 +23,6 @@ class Base(Drawable):
         return self
 
     def is_crushed(self) -> bool:
-        return all(map(lambda warrior: warrior.is_dead(), self.warriors))
+        return len(self.warriors) == 0 or all(
+            map(lambda warrior: warrior.is_dead(), self.warriors)
+        )

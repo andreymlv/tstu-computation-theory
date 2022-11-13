@@ -4,13 +4,11 @@ import keyboard
 
 from game.display.field import Field
 from game.display.position import Position
-from game.units.base import Base
-from game.utils import flush_input
 
 
 class GameState(NamedTuple):
     field: Field
-    base: Base
+    base: Position
     cursor: Position
     quit_required: bool
 
@@ -35,7 +33,6 @@ class GameState(NamedTuple):
                     quit_required = True
                 case _:
                     pass
-        flush_input()
         if self.field.is_inside(move):
             field: Field = self.field.move_cursor(self.cursor, move)
             return GameState(
@@ -59,7 +56,10 @@ class GameState(NamedTuple):
         )
 
     def is_over(self) -> bool:
-        return self.base.is_crushed() or self.quit_required
+        return (
+            self.field.cells[self.base.x][self.base.y].base.is_crushed()
+            or self.quit_required
+        )
 
     def next(self) -> Self:
         return GameState(self.field, self.base, self.cursor, self.quit_required)

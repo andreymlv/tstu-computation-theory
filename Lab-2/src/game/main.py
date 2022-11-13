@@ -17,7 +17,7 @@ from game.units.base import Base
 from game.units.blank import Blank
 from game.units.cursor import Cursor
 from game.units.melee import Melee
-from game.utils import clear_screen, dimensions
+from game.utils import clear_screen, dimensions, flush_input
 from game.weapons.sword import Sword
 
 
@@ -37,6 +37,7 @@ def main() -> None:
         Rock(),
         Water(),
     ]
+    max_warriors = (width + height) // 2
     for x in range(width):
         for y in range(height):
             if y == 0:
@@ -44,27 +45,34 @@ def main() -> None:
             cells[x].append(
                 Cell(
                     Position(x, y),
+                    Base(False, max_warriors, []),
                     Blank(),
                     Blank(),
                     landscapes[random.randint(0, len(landscapes) - 1)],
                 )
             )
-    base: Base = Base(True, (width + height) // 2, [Melee(10, 8, 4, Sword(128, 8, 1))])
-    cells[0][0] = Cell(Position(0, 0), base, Cursor(), Grass())
+    cells[0][0] = Cell(
+        Position(0, 0),
+        Base(True, max_warriors, [Melee(10, 8, 4, Sword(128, 8, 1))]),
+        Blank(),
+        Cursor(),
+        Grass(),
+    )
     game_state: GameState = GameState(
         Field(Screen(width, height), cells),
-        base,
+        Position(0, 0),
         Position(0, 0),
         False,
     )
-    print(f"Please choose your base location on your field {width}x{height}.")
 
     while not game_state.is_over():
         clear_screen()
         game_state.print()
-        game_state = game_state.poll()
         game_state = game_state.next()
+        # Blocks game loop.
+        game_state = game_state.poll()
 
+    flush_input()
     colorama.deinit()
 
 
