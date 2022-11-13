@@ -29,7 +29,7 @@ class GameState(NamedTuple):
                 case "space":
                     pass
                 case "q":
-                    # TODO: ask to save.
+                    # TODO: ask to save game state.
                     quit_required = True
                 case _:
                     pass
@@ -51,7 +51,6 @@ class GameState(NamedTuple):
     def print(self) -> None:
         print(
             self.field.render(),
-            self.cursor,
             self.field.cells[self.cursor.x][self.cursor.y],
         )
 
