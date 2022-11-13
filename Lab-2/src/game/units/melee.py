@@ -5,6 +5,7 @@ from game.weapons.melee_weapon import MeleeWeapon
 
 class Melee(Drawable, Combatable):
     weapon: MeleeWeapon
+    name = "Melee"
 
     def draw(self) -> str:
         return "M"

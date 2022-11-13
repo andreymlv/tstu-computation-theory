@@ -27,4 +27,4 @@ class Cell(Drawable):
         return self.cursor.draw() + to_draw.draw()
 
     def can_enter(self) -> bool:
-        return self.base.is_crushed() and self.unit == Blank()
+        return self.base.is_crushed() and self.unit.draw() == " "

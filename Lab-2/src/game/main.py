@@ -54,7 +54,15 @@ def main() -> None:
             )
     cells[0][0] = Cell(
         Position(0, 0),
-        Base(True, max_warriors, [Melee(10, 8, 4, Sword(128, 8, 1))]),
+        Base(
+            True,
+            max_warriors,
+            [
+                Melee(10, 8, 4, Sword(128, 8, 1)),
+                Melee(10, 8, 4, Sword(128, 8, 1)),
+                Melee(10, 8, 4, Sword(128, 8, 1)),
+            ],
+        ),
         Blank(),
         Cursor(),
         cells[0][0].landscape,
