@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/sudo python3
 
 import random
 import colorama
