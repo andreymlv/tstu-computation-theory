@@ -1,4 +1,3 @@
-from turtle import color
 from typing import Self, NamedTuple
 
 import colorama
