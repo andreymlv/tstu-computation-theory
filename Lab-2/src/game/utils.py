@@ -21,7 +21,7 @@ def clear_screen() -> None:
     system("cls" if name == "nt" else "clear")
 
 
-def flush_input():
+def flush_input() -> None:
     if name == "nt":
         while kbhit():
             getch()

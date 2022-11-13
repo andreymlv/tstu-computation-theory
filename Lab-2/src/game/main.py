@@ -12,6 +12,7 @@ from game.landscapes.grass import Grass
 from game.landscapes.landscape import Landscape
 from game.landscapes.rock import Rock
 from game.landscapes.water import Water
+from game.state.game import Game
 from game.state.gamestate import GameState
 from game.units.base import Base
 from game.units.blank import Blank
@@ -56,21 +57,23 @@ def main() -> None:
         Base(True, max_warriors, [Melee(10, 8, 4, Sword(128, 8, 1))]),
         Blank(),
         Cursor(),
-        Grass(),
+        cells[0][0].landscape,
     )
-    game_state: GameState = GameState(
-        Field(Screen(width, height), cells),
-        Position(0, 0),
-        Position(0, 0),
-        False,
+    game: Game = Game(
+        GameState(
+            Field(Screen(width, height), cells),
+            Position(0, 0),
+            Position(0, 0),
+            False,
+        )
     )
 
-    while not game_state.is_over():
+    while not game.is_over():
         clear_screen()
-        game_state.print()
-        game_state = game_state.next()
+        game.print()
+        game = game.next()
         # Blocks game loop.
-        game_state = game_state.poll()
+        game = game.poll()
 
     flush_input()
     colorama.deinit()
