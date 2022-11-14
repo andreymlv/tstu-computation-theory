@@ -20,11 +20,14 @@ class Field(NamedTuple):
         return self
 
     def move_unit(self, position_from: Position, position_to: Position) -> Self:
-        if not self.is_possible_move(position_from, position_to):
-            return self
-        if not self.can_move_in(position_to):
-            return self
-        return self.swap_cell(position_from, position_to)
+        (
+            self.cells[position_from.x][position_from.y].unit,
+            self.cells[position_to.x][position_to.y].unit,
+        ) = (
+            self.cells[position_to.x][position_to.y].unit,
+            self.cells[position_from.x][position_from.y].unit,
+        )
+        return self
 
     def swap_cell(self, position_from: Position, position_to: Position) -> Self:
         if self.is_possible_move(position_from, position_to):
@@ -46,7 +49,7 @@ class Field(NamedTuple):
         return self.is_inside(position_from) and self.is_inside(position_to)
 
     def can_move_in(self, position_to: Position) -> bool:
-        return self.cells[position_to.x][position_to.y].unit == Blank()
+        return self.cells[position_to.x][position_to.y].unit.draw() == " "
 
     def render(self) -> str:
         zipped_cells: zip[tuple[Cell]] = zip(*self.cells)

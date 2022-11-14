@@ -16,9 +16,12 @@ from game.state.game import Game
 from game.state.gamestate import GameState
 from game.units.base import Base
 from game.units.blank import Blank
+from game.units.cavalry import Cavalry
 from game.units.cursor import Cursor
 from game.units.melee import Melee
+from game.units.range import Range
 from game.utils import clear_screen, dimensions, flush_input
+from game.weapons.bow import Bow
 from game.weapons.sword import Sword
 
 
@@ -59,14 +62,39 @@ def main() -> None:
             max_warriors,
             [
                 Melee(10, 8, 4, Sword(128, 8, 1)),
-                Melee(10, 8, 4, Sword(128, 8, 1)),
-                Melee(10, 8, 4, Sword(128, 8, 1)),
+                Range(10, 8, 4, Bow(128, 8, 1)),
+                Cavalry(10, 8, 4, Sword(128, 8, 1)),
             ],
         ),
         Blank(),
         Cursor(),
         cells[0][0].landscape,
     )
+
+    # debug
+    cells[3][3] = Cell(
+        Position(3, 3),
+        Base(
+            True,
+            max_warriors,
+            [],
+        ),
+        Melee(10, 8, 4, Sword(128, 8, 1)),
+        Blank(),
+        cells[3][3].landscape,
+    )
+    cells[5][5] = Cell(
+        Position(5, 5),
+        Base(
+            True,
+            max_warriors,
+            [],
+        ),
+        Cavalry(10, 8, 4, Sword(128, 8, 1)),
+        Blank(),
+        cells[5][5].landscape,
+    )
+
     game: Game = Game(
         GameState(
             Field(Screen(width, height), cells),

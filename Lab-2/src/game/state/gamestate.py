@@ -33,17 +33,10 @@ class GameState:
                 case "d" | "right" | "l":
                     move = Position(self.cursor.x + 1, self.cursor.y)
                 case "space":
-                    warriors: list[tuple[Combatable, bool]] = list()
-                    if self.cursor == self.base:
-                        warriors: list[tuple[Combatable, bool]] = list(
-                            map(
-                                lambda warrior: (warrior, False),
-                                self.field.cells[self.cursor.x][
-                                    self.cursor.y
-                                ].base.warriors,
-                            )
-                        )
-                        warriors[0] = (warriors[0][0], True)
+                    warriors: tuple[list[Combatable], int] = (
+                        self.field.cells[self.cursor.x][self.cursor.y].base.warriors,
+                        0,
+                    )
                     return GameSelect(
                         self.field, self.base, self.cursor, self.quit_required, warriors
                     ).poll()
@@ -69,7 +62,9 @@ class GameState:
 
     def print(self) -> None:
         print(
-            self.field.render(),
+            "Usage: 'wasd' to move cursor.\nPress 'space' to do some action.\nPress 'q' to quit.\n"
+            + self.field.render(),
+            "Cell:",
             self.field.cells[self.cursor.x][self.cursor.y],
         )
 
@@ -85,39 +80,98 @@ class GameState:
 
 @dataclass()
 class GameSelect(GameState):
-    names: list[tuple[Combatable, bool]]
+    names: tuple[list[Combatable], int]
 
     def poll(self) -> GameState:
         if self.field.cells[self.cursor.x][self.cursor.y].can_enter():
             return self
         if self.field.cells[self.cursor.x][self.cursor.y].unit.draw() != " ":
+            clear_screen()
+            print("Manage unit: 'm' for move.")
+            self.print()
             event: keyboard.KeyboardEvent = keyboard.read_event(True)
             if event.event_type == keyboard.KEY_DOWN:
                 match event.name:
-                    case "a" | "left" | "h":
-                        return self.poll()
-                    case "d" | "right" | "l":
-                        return self.poll()
-                    case "space":
-                        return self
+                    case "m":
+                        return GameMove(
+                            self.field, self.base, self.cursor, self.quit_required
+                        ).poll()
+                    case _:
+                        pass
         elif self.field.cells[self.cursor.x][self.cursor.y].base.draw() != " ":
-            names: str = " ".join(
-                map(
-                    lambda w: colorama.Fore.GREEN + w[0].name + colorama.Style.RESET_ALL if w[1] else w[0].name,
-                    self.names,
-                )
-            )
+            names: list[str] = []
+            for i, warrior in enumerate(self.names[0]):
+                if i == self.names[1]:
+                    names.append(
+                        colorama.Fore.GREEN + warrior.name + colorama.Style.RESET_ALL
+                    )
+                else:
+                    names.append(warrior.name)
+            colored_names = " ".join(names)
             clear_screen()
-            print(names)
+            print("Base:", colored_names)
             self.print()
             event: keyboard.KeyboardEvent = keyboard.read_event(True)
             if event.event_type == keyboard.KEY_DOWN:
                 match event.name:
                     case "a" | "left" | "h":
                         warriors = self.names
-                        return GameSelect(self.field, self.base, self.cursor, self.quit_required, warriors).poll()
+                        if self.names[1] > 0:
+                            warriors = (warriors[0], warriors[1] - 1)
+                        return GameSelect(
+                            self.field,
+                            self.base,
+                            self.cursor,
+                            self.quit_required,
+                            warriors,
+                        ).poll()
                     case "d" | "right" | "l":
-                        return self.poll()
+                        warriors = self.names
+                        if self.names[1] < len(self.names[0]) - 1:
+                            warriors = (warriors[0], warriors[1] + 1)
+                        return GameSelect(
+                            self.field,
+                            self.base,
+                            self.cursor,
+                            self.quit_required,
+                            warriors,
+                        ).poll()
                     case "space":
+                        # If there is no space for placinig warrior around base: do nothing.
+                        # If there is space for placing warrior around base:
+                        # place warrior on filed and remove that warrior from base.
                         return self
+                    case _:
+                        pass
         return self.poll()
+
+
+@dataclass()
+class GameMove(GameState):
+    def poll(self) -> GameState:
+        move: Position = self.cursor
+        clear_screen()
+        self.print()
+        event: keyboard.KeyboardEvent = keyboard.read_event(True)
+        if event.event_type == keyboard.KEY_DOWN:
+            match event.name:
+                case "w" | "up" | "k":
+                    move = Position(self.cursor.x, self.cursor.y - 1)
+                case "a" | "left" | "h":
+                    move = Position(self.cursor.x - 1, self.cursor.y)
+                case "s" | "down" | "j":
+                    move = Position(self.cursor.x, self.cursor.y + 1)
+                case "d" | "right" | "l":
+                    move = Position(self.cursor.x + 1, self.cursor.y)
+                case "space":
+                    return GameState(
+                        self.field, self.base, self.cursor, self.quit_required
+                    ).poll()
+                case _:
+                    pass
+        if self.field.is_inside(move):
+            field: Field = self.field.move_unit(self.cursor, move).move_cursor(
+                self.cursor, move
+            )
+            return GameMove(field, self.base, move, self.quit_required).poll()
+        return self
