@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from functools import reduce
 import pygame
 
 from src.disk import Disk
@@ -9,14 +10,19 @@ from src.tower import Tower
 
 def main() -> None:
     pygame.init()
+    first_tower_disks: list[Disk] = list(map(lambda x: Disk(x), range(3, 0, -1)))
     game: Game = Game(
-        [Tower([]).push(Disk(3)).push(Disk(2)).push(Disk(1)), Tower([]), Tower([])]
+        [
+            Tower(first_tower_disks),
+            Tower([]),
+            Tower([]),
+        ]
     )
     init()
     # while not game.over:
     #     game = game.poll()
     #     game.render()
-    print(game.hanoi(hanoi_recursive))
+    print(game.hanoi(hanoi_recursive)[-1])
     pygame.quit()
 
 
