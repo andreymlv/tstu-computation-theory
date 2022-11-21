@@ -42,7 +42,9 @@ class Game(Printable):
     def hanoi(
         self, strategy: Callable[[int, int, int, int], list[tuple[int, int]]]
     ) -> list:
-        steps: list[tuple[int, int]] = strategy(len(self.towers[0].disks), 0, 2, 1)
+        steps: list[tuple[int, int]] = strategy(
+            len(self.towers[0].disks), 0, len(self.towers) - 1, 1
+        )
         history: list = [self]
         for step in steps:
             history.append(history[-1].step(step))
