@@ -1,5 +1,28 @@
-def hanoi(disks: int, start_peg: int = 1, end_peg: int = 3) -> None:
-    if disks:
-        hanoi(disks - 1, start_peg, 6 - start_peg - end_peg)
-        print(f"Move disk {disks} from peg {start_peg} to peg {end_peg}")
-        hanoi(disks - 1, 6 - start_peg - end_peg, end_peg)
+def hanoi_recursive(
+    disks: int, source: int, target: int, temp: int
+) -> list[tuple[int, int]]:
+    """
+    Usage: hanoi_recursive(number of disks, from, to, temp)
+    Returns: list of moves [(from, to), (from, to), ...]
+    """
+    if disks == 0:
+        return []
+    return (
+        hanoi_recursive(disks - 1, source, temp, target)
+        + [(source, target)]
+        + hanoi_recursive(disks - 1, temp, target, source)
+    )
+
+
+def even(x):
+    return x % 2 == 0
+
+
+def odd(x):
+    return not even(x)
+
+
+def hanoi_simple_iterative(disks: int, source: int, target: int, temp: int):
+    if even(disks):
+        pass
+    pass

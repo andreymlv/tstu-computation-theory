@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from dataclasses import dataclass
 
 import pygame
@@ -37,6 +38,18 @@ class Game(Printable):
             towers[to_tower] = towers[to_tower].push(temp_disk)
             return Game(towers, self.clock, self.window, self.over)
         return self
+
+    def hanoi(
+        self, strategy: Callable[[int, int, int, int], list[tuple[int, int]]]
+    ) -> list:
+        steps: list[tuple[int, int]] = strategy(len(self.towers[0].disks), 0, 2, 1)
+        history: list = [self]
+        for step in steps:
+            history.append(history[-1].step(step))
+        return history
+
+    def step(self, move: tuple[int, int]):
+        return self.move(move[0], move[1])
 
     def can_move(self, from_tower: int, to_tower: int) -> bool:
         return self.towers[from_tower].can_pop() and self.towers[to_tower].can_push(
