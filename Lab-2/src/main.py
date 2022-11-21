@@ -1,6 +1,7 @@
 #!/usr/bin/sudo python3
 
 import random
+
 import colorama
 
 from game.display.cell import Cell

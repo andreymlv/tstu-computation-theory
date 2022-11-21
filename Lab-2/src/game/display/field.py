@@ -1,4 +1,4 @@
-from typing import Self, NamedTuple
+from typing import NamedTuple, Self
 
 import colorama
 
