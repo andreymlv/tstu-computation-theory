@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from functools import reduce
 import pygame
 
 from src.disk import Disk
