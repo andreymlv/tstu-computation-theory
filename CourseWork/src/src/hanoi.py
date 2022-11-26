@@ -12,17 +12,3 @@ def hanoi_recursive(
         + [(source, target)]
         + hanoi_recursive(disks - 1, temp, target, source)
     )
-
-
-def even(x):
-    return x % 2 == 0
-
-
-def odd(x):
-    return not even(x)
-
-
-def hanoi_simple_iterative(disks: int, source: int, target: int, temp: int):
-    if even(disks):
-        pass
-    pass

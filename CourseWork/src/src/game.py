@@ -39,6 +39,18 @@ class Game(Printable):
             return Game(towers, self.clock, self.window, self.over)
         return self
 
+    def hanoi_recursive(
+        self, strategy: Callable[[int, int, int, int], list[tuple[int, int]]]
+    ) -> list:
+        def helper(steps: list, history: list) -> list:
+            if len(steps) == 0:
+                return history
+            return helper(steps[1:], history + [history[-1].step(steps[0])])
+
+        return helper(
+            strategy(len(self.towers[0].disks), 0, len(self.towers) - 1, 1), [self]
+        )
+
     def hanoi(
         self, strategy: Callable[[int, int, int, int], list[tuple[int, int]]]
     ) -> list:
@@ -48,6 +60,49 @@ class Game(Printable):
         history: list = [self]
         for step in steps:
             history.append(history[-1].step(step))
+        return history
+
+    def hanoi_iterative(self) -> list:
+        disks: int = len(self.towers[0].disks)
+        source: int = 0
+        target: int = len(self.towers) - 1
+        temp: int = 1
+        history: list = [self]
+        total: int = 2**disks - 1
+        if disks % 2 == 0:
+            for i in range(total):
+                if i % 3 == 0:
+                    if history[-1].can_move(source, temp):
+                        history.append(history[-1].step((source, temp)))
+                    else:
+                        history.append(history[-1].step((temp, source)))
+                elif i % 3 == 1:
+                    if history[-1].can_move(source, target):
+                        history.append(history[-1].step((source, target)))
+                    else:
+                        history.append(history[-1].step((target, source)))
+                else:
+                    if history[-1].can_move(temp, target):
+                        history.append(history[-1].step((temp, target)))
+                    else:
+                        history.append(history[-1].step((target, temp)))
+        else:
+            for i in range(total):
+                if i % 3 == 0:
+                    if history[-1].can_move(source, target):
+                        history.append(history[-1].step((source, target)))
+                    else:
+                        history.append(history[-1].step((target, source)))
+                elif i % 3 == 1:
+                    if history[-1].can_move(source, temp):
+                        history.append(history[-1].step((source, temp)))
+                    else:
+                        history.append(history[-1].step((temp, source)))
+                else:
+                    if history[-1].can_move(temp, target):
+                        history.append(history[-1].step((temp, target)))
+                    else:
+                        history.append(history[-1].step((target, temp)))
         return history
 
     def step(self, move: tuple[int, int]):
