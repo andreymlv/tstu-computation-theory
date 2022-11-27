@@ -186,6 +186,7 @@ class RecursiveSolveState(GameState):
 
     def next(self):
         pygame.time.wait(1000)
+        return self
 
 
 @dataclass()
@@ -202,6 +203,7 @@ class IterativeSolveState(GameState):
 
     def next(self):
         pygame.time.wait(1000)
+        return self
 
 
 @dataclass()
