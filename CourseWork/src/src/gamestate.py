@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import pygame
 
 from src.disk import Disk
+from src.hanoi import hanoi_recursive
 from src.size import Size
 from src.tower import Tower
 
@@ -169,14 +170,24 @@ class SolveState(GameState):
                     case pygame.K_ESCAPE:
                         return GameState(self.towers, False)
                     case pygame.K_r:
-                        return RecursiveSolveState(self.towers, False)
+                        return RecursiveSolveState(
+                            self.towers,
+                            False,
+                            GameState(self.towers, False).hanoi(hanoi_recursive),
+                        )
                     case pygame.K_i:
-                        return IterativeSolveState(self.towers, False)
+                        return IterativeSolveState(
+                            self.towers,
+                            False,
+                            GameState(self.towers, False).hanoi_iterative(),
+                        )
         return self
 
 
 @dataclass()
 class RecursiveSolveState(GameState):
+    history: list[GameState]
+
     def poll(self):
         print("RecursiveSolveState")
         for event in pygame.event.get():
@@ -190,11 +201,15 @@ class RecursiveSolveState(GameState):
 
     def next(self):
         pygame.time.wait(1000)
-        return self
+        if len(self.history) == 0:
+            return GameState(self.towers, False)
+        return RecursiveSolveState(self.history[0].towers, False, self.history[1:])
 
 
 @dataclass()
 class IterativeSolveState(GameState):
+    history: list[GameState]
+
     def poll(self):
         print("IterativeSolveState")
         for event in pygame.event.get():
@@ -208,7 +223,9 @@ class IterativeSolveState(GameState):
 
     def next(self):
         pygame.time.wait(1000)
-        return self
+        if len(self.history) == 0:
+            return GameState(self.towers, False)
+        return IterativeSolveState(self.history[0].towers, False, self.history[1:])
 
 
 @dataclass()
