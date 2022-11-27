@@ -4,12 +4,20 @@ from dataclasses import dataclass
 import pygame
 
 from src.disk import Disk
+from src.position import Position
 from src.printable import Printable
 from src.tower import Tower
 
 
 def init() -> None:
     pygame.display.set_caption("Hanoi Tower")
+
+
+def flat_map(f: Callable, xs) -> list:
+    ys = []
+    for x in xs:
+        ys.extend(f(x))
+    return ys
 
 
 @dataclass()
@@ -27,6 +35,19 @@ class Game(Printable):
 
     def render(self) -> None:
         self.window.fill((255, 255, 255))
+        disks_rects: list[pygame.Rect] = list(
+            map(
+                lambda disk: disk.draw(Position(0, 0)),
+                flat_map(lambda id: id, map(lambda tower: tower.disks, self.towers)),
+            )
+        )
+        towers_rects: list[pygame.Rect] = list(
+            map(lambda tower: tower.draw(Position(0, 0)), self.towers)
+        )
+        for tower in towers_rects:
+            pygame.draw.rect(self.window, (123, 123, 123), tower)
+        for disk in disks_rects:
+            pygame.draw.rect(self.window, (50, 123, 50), disk)
         pygame.display.update()
         self.clock.tick(60)
 

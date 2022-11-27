@@ -4,7 +4,9 @@ import pygame
 
 from src.disk import Disk
 from src.drawable import Drawable
+from src.position import Position
 from src.printable import Printable
+from src.size import Size
 
 
 @dataclass()
@@ -25,7 +27,7 @@ class Tower(Drawable, Printable):
         return self.disks[-1]
 
     def can_push(self, disk: Disk) -> bool:
-        return len(self.disks) == 0 or self.last().size > disk.size
+        return len(self.disks) == 0 or self.last().weight > disk.weight
 
     def can_pop(self) -> bool:
         return len(self.disks) > 0
@@ -33,5 +35,5 @@ class Tower(Drawable, Printable):
     def print(self) -> str:
         return super().print()
 
-    def draw(self) -> pygame.Rect:
-        return super().draw()
+    def draw(self, position: Position) -> pygame.Rect:
+        return pygame.Rect(position, Size(10, 5 * len(self.disks)))

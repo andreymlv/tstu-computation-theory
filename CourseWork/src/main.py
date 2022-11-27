@@ -18,11 +18,9 @@ def main() -> None:
         ]
     )
     init()
-    # while not game.over:
-    #     game = game.poll()
-    #     game.render()
-    print(game.hanoi_iterative()[-1])
-    print(game.hanoi_recursive(hanoi_recursive)[-1])
+    while not game.over:
+        game = game.poll()
+        game.render()
     pygame.quit()
 
 
