@@ -225,6 +225,8 @@ class MoveState(GameState):
                     case pygame.K_ESCAPE:
                         return GameState(self.towers, False)
                     case pygame.K_SPACE:
+                        if len(self.towers[self.selected_tower].disks) == 0:
+                            return self
                         return SelectState(self.towers, False, self.selected_tower)
                     case pygame.K_a | pygame.K_LEFT | pygame.K_h:
                         return MoveState(
