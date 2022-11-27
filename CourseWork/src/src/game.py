@@ -63,11 +63,11 @@ class Game(Printable):
         return history
 
     def hanoi_iterative(self) -> list:
-        def legal_move(source, target, history):
-            if history[-1].can_move(source, target):
-                history.append(history[-1].step((source, target)))
+        def two_way_move(source, target, last_state):
+            if last_state.can_move(source, target):
+                return last_state.step((source, target))
             else:
-                history.append(history[-1].step((target, source)))
+                return last_state.step((target, source))
 
         disks: int = len(self.towers[0].disks)
         source: int = 0
@@ -78,19 +78,19 @@ class Game(Printable):
         if disks % 2 == 0:
             for i in range(total):
                 if i % 3 == 0:
-                    legal_move(source, temp, history)
+                    history.append(two_way_move(source, temp, history[-1]))
                 elif i % 3 == 1:
-                    legal_move(source, target, history)
+                    history.append(two_way_move(source, target, history[-1]))
                 else:
-                    legal_move(temp, target, history)
+                    history.append(two_way_move(temp, target, history[-1]))
         else:
             for i in range(total):
                 if i % 3 == 0:
-                    legal_move(source, target, history)
+                    history.append(two_way_move(source, target, history[-1]))
                 elif i % 3 == 1:
-                    legal_move(source, temp, history)
+                    history.append(two_way_move(source, temp, history[-1]))
                 else:
-                    legal_move(temp, target, history)
+                    history.append(two_way_move(temp, target, history[-1]))
         return history
 
     def step(self, move: tuple[int, int]):
