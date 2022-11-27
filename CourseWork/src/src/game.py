@@ -63,6 +63,12 @@ class Game(Printable):
         return history
 
     def hanoi_iterative(self) -> list:
+        def legal_move(source, target, history):
+            if history[-1].can_move(source, target):
+                history.append(history[-1].step((source, target)))
+            else:
+                history.append(history[-1].step((target, source)))
+
         disks: int = len(self.towers[0].disks)
         source: int = 0
         target: int = len(self.towers) - 1
@@ -72,37 +78,19 @@ class Game(Printable):
         if disks % 2 == 0:
             for i in range(total):
                 if i % 3 == 0:
-                    if history[-1].can_move(source, temp):
-                        history.append(history[-1].step((source, temp)))
-                    else:
-                        history.append(history[-1].step((temp, source)))
+                    legal_move(source, temp, history)
                 elif i % 3 == 1:
-                    if history[-1].can_move(source, target):
-                        history.append(history[-1].step((source, target)))
-                    else:
-                        history.append(history[-1].step((target, source)))
+                    legal_move(source, target, history)
                 else:
-                    if history[-1].can_move(temp, target):
-                        history.append(history[-1].step((temp, target)))
-                    else:
-                        history.append(history[-1].step((target, temp)))
+                    legal_move(temp, target, history)
         else:
             for i in range(total):
                 if i % 3 == 0:
-                    if history[-1].can_move(source, target):
-                        history.append(history[-1].step((source, target)))
-                    else:
-                        history.append(history[-1].step((target, source)))
+                    legal_move(source, target, history)
                 elif i % 3 == 1:
-                    if history[-1].can_move(source, temp):
-                        history.append(history[-1].step((source, temp)))
-                    else:
-                        history.append(history[-1].step((temp, source)))
+                    legal_move(source, temp, history)
                 else:
-                    if history[-1].can_move(temp, target):
-                        history.append(history[-1].step((temp, target)))
-                    else:
-                        history.append(history[-1].step((target, temp)))
+                    legal_move(temp, target, history)
         return history
 
     def step(self, move: tuple[int, int]):
