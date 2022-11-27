@@ -28,11 +28,12 @@ class GameState:
         return self
 
     def poll(self):
+        print("GameState")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
+                if event.key == pygame.K_m:
                     return MoveState(self.towers, False, 0)
                 if event.key == pygame.K_s:
                     return SolveState(self.towers, False)
@@ -133,6 +134,7 @@ class SelectState(GameState):
     selected_tower: int
 
     def poll(self):
+        print("SelectState", self.selected_tower)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -158,6 +160,7 @@ class SelectState(GameState):
 @dataclass()
 class SolveState(GameState):
     def poll(self):
+        print("SolveState")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -167,7 +170,7 @@ class SolveState(GameState):
                         return GameState(self.towers, False)
                     case pygame.K_r:
                         return RecursiveSolveState(self.towers, False)
-                    case pygame.K_p:
+                    case pygame.K_i:
                         return IterativeSolveState(self.towers, False)
         return self
 
@@ -175,6 +178,7 @@ class SolveState(GameState):
 @dataclass()
 class RecursiveSolveState(GameState):
     def poll(self):
+        print("RecursiveSolveState")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -192,6 +196,7 @@ class RecursiveSolveState(GameState):
 @dataclass()
 class IterativeSolveState(GameState):
     def poll(self):
+        print("IterativeSolveState")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -211,6 +216,7 @@ class MoveState(GameState):
     selected_tower: int
 
     def poll(self):
+        print("MoveState", self.selected_tower)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
