@@ -33,10 +33,17 @@ class GameState:
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_m:
-                    return MoveState(self.towers, False, 0)
-                if event.key == pygame.K_s:
-                    return SolveState(self.towers, False)
+                match event.key:
+                    case pygame.K_m:
+                        return MoveState(self.towers, False, 0)
+                    case pygame.K_s:
+                        return SolveState(self.towers, False)
+                    case _:
+                        return HelpState(
+                            self.towers,
+                            False,
+                            "s - Solve mode ; m - Move mode",
+                        )
         return self
 
     def render(self) -> None:
@@ -127,6 +134,22 @@ class GameState:
 
 
 @dataclass()
+class HelpState(GameState):
+    help_text: str
+
+    def poll(self):
+        print("HelpState", self.help_text)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return GameState(self.towers, True)
+            if event.type == pygame.KEYDOWN:
+                match event.key:
+                    case pygame.K_ESCAPE | pygame.K_SPACE:
+                        return GameState(self.towers, False)
+        return self
+
+
+@dataclass()
 class SelectState(GameState):
     selected_tower: int
 
@@ -151,6 +174,8 @@ class SelectState(GameState):
                             False,
                             (self.selected_tower + 1) % len(self.towers),
                         )
+                    case _:
+                        return HelpState(self.towers, False, "")
         return self
 
 
@@ -177,6 +202,8 @@ class SolveState(GameState):
                             False,
                             GameState(self.towers, False).hanoi_iterative(),
                         )
+                    case _:
+                        return HelpState(self.towers, False, "")
         return self
 
 
@@ -193,6 +220,8 @@ class RecursiveSolveState(GameState):
                 match event.key:
                     case pygame.K_ESCAPE | pygame.K_SPACE:
                         return GameState(self.towers, False)
+                    case _:
+                        return HelpState(self.towers, False, "")
         return self
 
     def next(self):
@@ -215,6 +244,8 @@ class IterativeSolveState(GameState):
                 match event.key:
                     case pygame.K_ESCAPE | pygame.K_SPACE:
                         return GameState(self.towers, False)
+                    case _:
+                        return HelpState(self.towers, False, "")
         return self
 
     def next(self):
@@ -253,4 +284,6 @@ class MoveState(GameState):
                             False,
                             (self.selected_tower + 1) % len(self.towers),
                         )
+                    case _:
+                        return HelpState(self.towers, False, "")
         return self
