@@ -4,7 +4,6 @@ from dataclasses import dataclass
 import pygame
 
 from src.disk import Disk
-from src.hanoi import hanoi_recursive
 from src.size import Size
 from src.tower import Tower
 
@@ -67,21 +66,18 @@ class GameState:
             return GameState(towers, self.over)
         return self
 
-    def hanoi_recursive(
-        self, strategy: Callable[[int, int, int, int], list[tuple[int, int]]]
-    ) -> list:
-        def helper(steps: list, history: list) -> list:
-            if len(steps) == 0:
-                return history
-            return helper(steps[1:], history + [history[-1].step(steps[0])])
+    def hanoi_recursive(self) -> list:
+        def strategy(
+            disks: int, source: int, target: int, temp: int
+        ) -> list[tuple[int, int]]:
+            if disks == 0:
+                return []
+            return (
+                strategy(disks - 1, source, temp, target)
+                + [(source, target)]
+                + strategy(disks - 1, temp, target, source)
+            )
 
-        return helper(
-            strategy(len(self.towers[0].disks), 0, len(self.towers) - 1, 1), [self]
-        )
-
-    def hanoi(
-        self, strategy: Callable[[int, int, int, int], list[tuple[int, int]]]
-    ) -> list:
         steps: list[tuple[int, int]] = strategy(
             len(self.towers[0].disks), 0, len(self.towers) - 1, 1
         )
@@ -173,7 +169,7 @@ class SolveState(GameState):
                         return RecursiveSolveState(
                             self.towers,
                             False,
-                            GameState(self.towers, False).hanoi(hanoi_recursive),
+                            GameState(self.towers, False).hanoi_recursive(),
                         )
                     case pygame.K_i:
                         return IterativeSolveState(
