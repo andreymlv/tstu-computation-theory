@@ -8,7 +8,9 @@ from src.tower import Tower
 class TestGame(TestCase):
     def test_move(self):
         game_expected = Game([Tower([]), Tower([]), Tower([])])
-        game_expected.towers[0] = game_expected.towers[0].push(Disk(3)).push(Disk(2)).push(Disk(1))
+        game_expected.towers[0] = (
+            game_expected.towers[0].push(Disk(3)).push(Disk(2)).push(Disk(1))
+        )
         game_expected = game_expected.move(0, 1)
         game_actual = Game([Tower([Disk(3), Disk(2)]), Tower([Disk(1)]), Tower([])])
         self.assertEqual(game_expected, game_actual, "Game states aren't equal.")

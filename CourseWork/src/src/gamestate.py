@@ -28,7 +28,7 @@ class GameState:
         return self
 
     def poll(self):
-        print("GameState")
+        print("GameState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -38,11 +38,13 @@ class GameState:
                         return MoveState(self.towers, False, 0)
                     case pygame.K_s:
                         return SolveState(self.towers, False)
+                    case pygame.K_r:
+                        return RestartState(self.towers, False)
                     case _:
                         return HelpState(
                             self.towers,
                             False,
-                            "s - Solve mode ; m - Move mode",
+                            "s - Solve mode ; m - Move mode ; r - Restart game ;",
                         )
         return self
 
@@ -132,13 +134,45 @@ class GameState:
             self.towers[from_tower].last()
         )
 
+    def fresh_towers(self) -> list[Tower]:
+        disks: int = len(
+            flat_map(
+                lambda id: id,
+                map(lambda tower: tower.disks, self.towers),
+            )
+        )
+        towers: list[Tower] = list(map(lambda _: Tower([]), range(len(self.towers))))
+        towers[0].disks = list(map(lambda x: Disk(x), range(disks, 0, -1)))
+        return towers
+
+
+@dataclass()
+class RestartState(GameState):
+    def poll(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return GameState(self.towers, True)
+            if event.type == pygame.KEYDOWN:
+                match event.key:
+                    case pygame.K_ESCAPE | pygame.K_SPACE | pygame.K_n:
+                        return GameState(self.towers, False)
+                    case pygame.K_y:
+                        return GameState(self.fresh_towers(), False)
+                    case _:
+                        return HelpState(
+                            self.towers,
+                            False,
+                            "y - Yes, restart the game ; n - No, don't restart ;",
+                        )
+        return self
+
 
 @dataclass()
 class HelpState(GameState):
     help_text: str
 
     def poll(self):
-        print("HelpState", self.help_text)
+        print("HelpState", self.help_text, self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -154,7 +188,7 @@ class SelectState(GameState):
     selected_tower: int
 
     def poll(self):
-        print("SelectState", self.selected_tower)
+        print("SelectState", self.selected_tower, self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -175,14 +209,16 @@ class SelectState(GameState):
                             (self.selected_tower + 1) % len(self.towers),
                         )
                     case _:
-                        return HelpState(self.towers, False, "")
+                        return HelpState(
+                            self.towers, False, "a - Move left ; d - Move right ;"
+                        )
         return self
 
 
 @dataclass()
 class SolveState(GameState):
     def poll(self):
-        print("SolveState")
+        print("SolveState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -192,18 +228,22 @@ class SolveState(GameState):
                         return GameState(self.towers, False)
                     case pygame.K_r:
                         return RecursiveSolveState(
-                            self.towers,
+                            self.fresh_towers(),
                             False,
-                            GameState(self.towers, False).hanoi_recursive(),
+                            GameState(self.fresh_towers(), False).hanoi_recursive(),
                         )
                     case pygame.K_i:
                         return IterativeSolveState(
-                            self.towers,
+                            self.fresh_towers(),
                             False,
-                            GameState(self.towers, False).hanoi_iterative(),
+                            GameState(self.fresh_towers(), False).hanoi_iterative(),
                         )
                     case _:
-                        return HelpState(self.towers, False, "")
+                        return HelpState(
+                            self.towers,
+                            False,
+                            "r - Recursive solve ; i - Iterative solve ;",
+                        )
         return self
 
 
@@ -212,7 +252,7 @@ class RecursiveSolveState(GameState):
     history: list[GameState]
 
     def poll(self):
-        print("RecursiveSolveState")
+        print("RecursiveSolveState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -220,8 +260,6 @@ class RecursiveSolveState(GameState):
                 match event.key:
                     case pygame.K_ESCAPE | pygame.K_SPACE:
                         return GameState(self.towers, False)
-                    case _:
-                        return HelpState(self.towers, False, "")
         return self
 
     def next(self):
@@ -236,7 +274,7 @@ class IterativeSolveState(GameState):
     history: list[GameState]
 
     def poll(self):
-        print("IterativeSolveState")
+        print("IterativeSolveState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -244,8 +282,6 @@ class IterativeSolveState(GameState):
                 match event.key:
                     case pygame.K_ESCAPE | pygame.K_SPACE:
                         return GameState(self.towers, False)
-                    case _:
-                        return HelpState(self.towers, False, "")
         return self
 
     def next(self):
@@ -260,7 +296,7 @@ class MoveState(GameState):
     selected_tower: int
 
     def poll(self):
-        print("MoveState", self.selected_tower)
+        print("MoveState", self.selected_tower, self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -285,5 +321,9 @@ class MoveState(GameState):
                             (self.selected_tower + 1) % len(self.towers),
                         )
                     case _:
-                        return HelpState(self.towers, False, "")
+                        return HelpState(
+                            self.towers,
+                            False,
+                            "space - Select ; left - Move left ; right - Move right ;",
+                        )
         return self
