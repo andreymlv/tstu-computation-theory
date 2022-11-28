@@ -16,5 +16,5 @@ class Disk(Drawable, Printable):
     def print(self) -> str:
         return self.weight * "#"
 
-    def draw(self, position: Position) -> pygame.Rect:
-        return pygame.Rect(position, Size(20 * self.weight, 10))
+    def draw(self, position: Position, size: Size) -> pygame.Rect:
+        return pygame.Rect(position, size)

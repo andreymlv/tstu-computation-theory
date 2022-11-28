@@ -35,5 +35,5 @@ class Tower(Drawable, Printable):
     def print(self) -> str:
         return super().print()
 
-    def draw(self, position: Position) -> pygame.Rect:
-        return pygame.Rect(position, Size(10, 5 * len(self.disks)))
+    def draw(self, position: Position, size: Size) -> pygame.Rect:
+        return pygame.Rect(position, size)

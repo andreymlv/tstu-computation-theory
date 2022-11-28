@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import pygame
 
 from src.disk import Disk
+from src.position import Position
 from src.size import Size
 from src.tower import Tower
 
@@ -49,20 +50,34 @@ class GameState:
         return self
 
     def render(self) -> None:
-        pygame.display.set_mode(Size(800, 600)).fill((255, 255, 255))
-        # disks_rects: list[pygame.Rect] = list(
-        #     map(
-        #         lambda disk: disk.draw(Position(0, 0)),
-        #         flat_map(lambda id: id, map(lambda tower: tower.disks, self.towers)),
-        #     )
-        # )
-        # towers_rects: list[pygame.Rect] = list(
-        #     map(lambda tower: tower.draw(Position(0, 0)), self.towers)
-        # )
-        # for tower in towers_rects:
-        #     pygame.draw.rect(self.window, (123, 123, 123), tower)
-        # for disk in disks_rects:
-        #     pygame.draw.rect(self.window, (50, 123, 50), disk)
+        screen_size = Size(800, 600)
+        backgroud_color = pygame.Color((255, 255, 255))
+        tower_color = pygame.Color((255, 0, 0))
+        disk_color = pygame.Color((0, 255, 0))
+        max_disks = len(self.fresh_towers()[0].disks)
+        tower_size = Size(screen_size.width * 0.1 / 2, 300)
+        window = pygame.display.set_mode(screen_size)
+        window.fill(backgroud_color)
+        towers_rects: list[pygame.Rect] = []
+        for i, tower in enumerate(self.towers):
+            position = Position(
+                i * screen_size.width / len(self.towers) + screen_size.width * 0.1,
+                screen_size.height * 0.4,
+            )
+            towers_rects.append(tower.draw(position, tower_size))
+        disks_rects: list[pygame.Rect] = []
+        for i, tower in enumerate(self.towers):
+            for j, disk in enumerate(tower.disks):
+                position = Position(
+                    i * screen_size.width / len(self.towers) + screen_size.width * 0.1,
+                    screen_size.height * 0.4,
+                )
+                disk_size = Size(12, 12)
+                towers_rects.append(disk.draw(position, disk_size))
+        for tower in towers_rects:
+            pygame.draw.rect(window, tower_color, tower)
+        for disk in disks_rects:
+            pygame.draw.rect(window, disk_color, disk)
         pygame.display.update()
         pygame.time.Clock().tick(60)
 
