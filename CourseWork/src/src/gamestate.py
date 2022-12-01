@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from dataclasses import dataclass
+from random import randint
 
 import pygame
 
@@ -18,6 +19,10 @@ def flat_map(f: Callable, xs) -> list:
     for x in xs:
         ys.extend(f(x))
     return ys
+
+
+def random_color() -> pygame.Color:
+    return pygame.Color((randint(0, 255), randint(0, 255), randint(0, 255)))
 
 
 @dataclass()
@@ -41,12 +46,14 @@ class GameState:
                         return SolveState(self.towers, False)
                     case pygame.K_r:
                         return RestartState(self.towers, False)
-                    case _:
+                    case pygame.K_F1:
                         return HelpState(
                             self.towers,
                             False,
                             "s - Solve mode ; m - Move mode ; r - Restart game ;",
                         )
+                    case pygame.K_q:
+                        return GameState(self.towers, True)
         return self
 
     def render(self) -> None:
@@ -55,31 +62,37 @@ class GameState:
         tower_color = pygame.Color((255, 0, 0))
         disk_color = pygame.Color((0, 255, 0))
         max_disks = len(self.fresh_towers()[0].disks)
-        tower_size = Size(screen_size.width * 0.1 / 2, 300)
+        first_tower_x = screen_size.width / len(self.towers) / 4
+        first_disk_x = screen_size.width / len(self.towers) / 8
+        max_width_disk = 2 * first_disk_x + first_tower_x
         window = pygame.display.set_mode(screen_size)
         window.fill(backgroud_color)
         towers_rects: list[pygame.Rect] = []
-        for i, tower in enumerate(self.towers):
-            position = Position(
-                i * screen_size.width / len(self.towers) + screen_size.width * 0.1,
-                screen_size.height * 0.4,
-            )
-            towers_rects.append(tower.draw(position, tower_size))
         disks_rects: list[pygame.Rect] = []
         for i, tower in enumerate(self.towers):
+            towers_rects.append(
+                tower.draw(
+                    Position(
+                        first_tower_x + screen_size.width / len(self.towers) * i,
+                        screen_size.height / 3,
+                    ),
+                    Size(first_tower_x * 2, screen_size.height),
+                )
+            )
             for j, disk in enumerate(tower.disks):
                 position = Position(
-                    i * screen_size.width / len(self.towers) + screen_size.width * 0.1,
-                    screen_size.height * 0.4,
+                    first_disk_x + screen_size.width / max_disks * i,
+                    100 * disk.weight,
                 )
-                disk_size = Size(12, 12)
-                towers_rects.append(disk.draw(position, disk_size))
+                disk_size = Size(max_width_disk / (j + 1), 100)
+                print(disk, position, disk_size)
+                disks_rects.append(disk.draw(position, disk_size))
         for tower in towers_rects:
             pygame.draw.rect(window, tower_color, tower)
         for disk in disks_rects:
-            pygame.draw.rect(window, disk_color, disk)
+            pygame.draw.rect(window, random_color(), disk)
         pygame.display.update()
-        pygame.time.Clock().tick(60)
+        pygame.time.Clock().tick(1)
 
     def move(self, from_tower: int, to_tower: int):
         if self.can_move(from_tower, to_tower):
@@ -173,7 +186,7 @@ class RestartState(GameState):
                         return GameState(self.towers, False)
                     case pygame.K_y:
                         return GameState(self.fresh_towers(), False)
-                    case _:
+                    case pygame.K_F1:
                         return HelpState(
                             self.towers,
                             False,
@@ -223,7 +236,7 @@ class SelectState(GameState):
                             False,
                             (self.selected_tower + 1) % len(self.towers),
                         )
-                    case _:
+                    case pygame.K_F1:
                         return HelpState(
                             self.towers, False, "a - Move left ; d - Move right ;"
                         )
@@ -253,7 +266,7 @@ class SolveState(GameState):
                             False,
                             GameState(self.fresh_towers(), False).hanoi_iterative(),
                         )
-                    case _:
+                    case pygame.K_F1:
                         return HelpState(
                             self.towers,
                             False,
@@ -278,7 +291,7 @@ class RecursiveSolveState(GameState):
         return self
 
     def next(self):
-        pygame.time.wait(1000)
+        # pygame.time.wait(1000)
         if len(self.history) == 0:
             return GameState(self.towers, False)
         return RecursiveSolveState(self.history[0].towers, False, self.history[1:])
@@ -300,7 +313,7 @@ class IterativeSolveState(GameState):
         return self
 
     def next(self):
-        pygame.time.wait(1000)
+        # pygame.time.wait(1000)
         if len(self.history) == 0:
             return GameState(self.towers, False)
         return IterativeSolveState(self.history[0].towers, False, self.history[1:])
@@ -335,7 +348,7 @@ class MoveState(GameState):
                             False,
                             (self.selected_tower + 1) % len(self.towers),
                         )
-                    case _:
+                    case pygame.K_F1:
                         return HelpState(
                             self.towers,
                             False,
