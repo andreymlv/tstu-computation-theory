@@ -1,10 +1,10 @@
 from typing import NamedTuple
 
-from src.gamestate import GameState
+from src.gamestate import GameState, HelpState
 
 
 class Game(NamedTuple):
-    state: GameState
+    state: GameState | HelpState
 
     def poll(self):
         return Game(self.state.poll())

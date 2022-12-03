@@ -5,6 +5,8 @@ from math import log
 
 import pygame
 
+from . import ptext
+
 from src.disk import Disk
 from src.position import Position
 from src.size import Size
@@ -35,7 +37,6 @@ class GameState:
         return self
 
     def poll(self):
-        print("GameState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -51,31 +52,39 @@ class GameState:
                         return HelpState(
                             self.towers,
                             False,
-                            "s - Solve mode ; m - Move mode ; r - Restart game ;",
+                            "s - Solve mode\nm - Move mode\nr - Restart game\nF1 - Help menu\nt - Change tower count\nd - Change disk count\nq - Quit",
+                            self,
                         )
+                    case pygame.K_t:
+                        return ChangeTowerCountState(self.towers, False)
+                    case pygame.K_d:
+                        return ChangeDiskCountState(self.towers, False)
                     case pygame.K_q:
                         return GameState(self.towers, True)
         return self
 
     def render(self) -> None:
-        screen_size = Size(1280, 720)
-        backgroud_color = pygame.Color((255, 255, 255))
-        tower_color = pygame.Color((255, 0, 0))
-        disk_color = pygame.Color((0, 255, 0))
-        max_disks = self.total_disks()
-        first_tower_x = screen_size.width / len(self.towers) / 4
-        first_disk_x = screen_size.width / len(self.towers) / 8
-        tower_width = first_disk_x * 2
-        max_width_disk = 2 * first_disk_x + first_tower_x
+        backgroud_color = pygame.Color((130, 130, 130))
+        screen_size = Size(1920, 1080)
         window = pygame.display.set_mode(screen_size)
         window.fill(backgroud_color)
+        tower_color = pygame.Color((200, 50, 50))
+        disk_color = pygame.Color((50, 200, 50))
+        max_disks = self.total_disks()
+        first_tower_x = screen_size.width / len(self.towers) / 3
+        max_width_disk = 2 * first_tower_x
         towers_rects: list[pygame.Rect] = []
         disks_rects: list[pygame.Rect] = []
         for i, tower in enumerate(self.towers):
-            tower_size = Size(tower_width, screen_size.height)
+            tower_size = Size(
+                max_width_disk / log(max_disks + 1, 2), screen_size.height
+            )
             tower_position = Position(
                 first_tower_x + screen_size.width / len(self.towers) * i,
-                screen_size.height / 3,
+                0,
+            )
+            center_of_tower = Position(
+                tower_position.x + tower_size.width / 2, tower_position.y
             )
             towers_rects.append(
                 tower.draw(
@@ -88,21 +97,15 @@ class GameState:
                     max_width_disk / log(max_disks + 1, disk.weight + 1),
                     screen_size.height / max_disks,
                 )
-                center_of_tower = Position(
-                    tower_position.x + tower_size.width / 2, tower_position.y
-                )
-                position = Position(
+                disk_position = Position(
                     center_of_tower.x - disk_size.width / 2,
-                    screen_size.height / max_disks * (disk.weight - 1),
+                    screen_size.height - disk_size.height * (j + 1),
                 )
-                print(disk, position, disk_size)
-                disks_rects.append(disk.draw(position, disk_size))
+                disks_rects.append(disk.draw(disk_position, disk_size))
         for tower in towers_rects:
             pygame.draw.rect(window, tower_color, tower)
         for disk in disks_rects:
             pygame.draw.rect(window, disk_color, disk)
-        pygame.display.update()
-        pygame.time.Clock().tick(30)
 
     def move(self, from_tower: int, to_tower: int):
         if self.can_move(from_tower, to_tower):
@@ -168,23 +171,84 @@ class GameState:
         return self.move(move[0], move[1])
 
     def can_move(self, from_tower: int, to_tower: int) -> bool:
-        return self.towers[from_tower].can_pop() and self.towers[to_tower].can_push(
-            self.towers[from_tower].last()
+        return (
+            len(self.towers) > 1
+            and self.towers[from_tower].can_pop()
+            and self.towers[to_tower].can_push(self.towers[from_tower].last())
         )
 
     def total_disks(self) -> int:
         return len(flat_map(lambda id: id, map(lambda tower: tower.disks, self.towers)))
 
-    def fresh_towers(self) -> list[Tower]:
+    def fresh_towers(self, disks) -> list[Tower]:
         towers: list[Tower] = list(map(lambda _: Tower([]), range(len(self.towers))))
-        towers[0].disks = list(map(lambda x: Disk(x), range(self.total_disks(), 0, -1)))
+        towers[0].disks = list(map(lambda x: Disk(x), range(disks, 0, -1)))
         return towers
+
+
+@dataclass()
+class ChangeDiskCountState(GameState):
+    def poll(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return GameState(self.towers, True)
+            if event.type == pygame.KEYDOWN:
+                match event.key:
+                    case pygame.K_ESCAPE:
+                        return GameState(self.towers, False)
+                    case pygame.K_p:
+                        return ChangeDiskCountState(
+                            self.fresh_towers(self.total_disks() + 1), False
+                        )
+                    case pygame.K_m:
+                        if self.total_disks() == 1:
+                            return self
+                        return ChangeDiskCountState(
+                            self.fresh_towers(self.total_disks() - 1), False
+                        )
+                    case pygame.K_F1:
+                        return HelpState(
+                            self.towers,
+                            False,
+                            "Any change restarts the game!\np - Increase number of disks\nm - Decrease number of disks\nESC - Go back",
+                            self,
+                        )
+        return self
+
+
+@dataclass()
+class ChangeTowerCountState(GameState):
+    def poll(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return GameState(self.towers, True)
+            if event.type == pygame.KEYDOWN:
+                match event.key:
+                    case pygame.K_ESCAPE:
+                        return GameState(self.towers, False)
+                    case pygame.K_p:
+                        return ChangeTowerCountState(
+                            self.fresh_towers(self.total_disks()) + [Tower([])], False
+                        )
+                    case pygame.K_m:
+                        if len(self.towers) == 1:
+                            return self
+                        return ChangeTowerCountState(
+                            self.fresh_towers(self.total_disks())[:-1], False
+                        )
+                    case pygame.K_F1:
+                        return HelpState(
+                            self.towers,
+                            False,
+                            "Any change restarts the game!\np - Increase number of towers\nm - Decrease number of towers\nESC - Go back",
+                            self,
+                        )
+        return self
 
 
 @dataclass()
 class RestartState(GameState):
     def poll(self):
-        print("RestartState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -193,12 +257,13 @@ class RestartState(GameState):
                     case pygame.K_ESCAPE | pygame.K_SPACE | pygame.K_n:
                         return GameState(self.towers, False)
                     case pygame.K_y:
-                        return GameState(self.fresh_towers(), False)
+                        return GameState(self.fresh_towers(self.total_disks()), False)
                     case pygame.K_F1:
                         return HelpState(
                             self.towers,
                             False,
-                            "y - Yes, restart the game ; n - No, don't restart ;",
+                            "Do you wanna restart?\ny - YES\nn, ESC, Space - NO, go back",
+                            self,
                         )
         return self
 
@@ -206,17 +271,28 @@ class RestartState(GameState):
 @dataclass()
 class HelpState(GameState):
     help_text: str
+    caller: GameState
 
     def poll(self):
-        print("HelpState", self.help_text, self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
             if event.type == pygame.KEYDOWN:
                 match event.key:
                     case pygame.K_ESCAPE | pygame.K_SPACE:
-                        return GameState(self.towers, False)
+                        return self.caller
         return self
+
+    def render(self):
+        screen_size = Size(1920, 1080)
+        super().render()
+        ptext.draw(
+            self.help_text,
+            centerx=screen_size.width / 2,
+            centery=screen_size.height / 2,
+            fontsize=64,
+            color=pygame.color.Color(0, 0, 0),
+        )
 
 
 @dataclass()
@@ -224,13 +300,12 @@ class SelectState(GameState):
     selected_tower: int
 
     def poll(self):
-        print("SelectState", self.selected_tower, self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
             if event.type == pygame.KEYDOWN:
                 match event.key:
-                    case pygame.K_ESCAPE | pygame.K_SPACE:
+                    case pygame.K_SPACE:
                         return MoveState(self.towers, False, self.selected_tower)
                     case pygame.K_a | pygame.K_LEFT | pygame.K_h:
                         return SelectState(
@@ -246,7 +321,10 @@ class SelectState(GameState):
                         )
                     case pygame.K_F1:
                         return HelpState(
-                            self.towers, False, "a - Move left ; d - Move right ;"
+                            self.towers,
+                            False,
+                            "a - Move left\nd - Move right\nSPACE - select disk",
+                            self,
                         )
         return self
 
@@ -254,7 +332,6 @@ class SelectState(GameState):
 @dataclass()
 class SolveState(GameState):
     def poll(self):
-        print("SolveState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -264,21 +341,26 @@ class SolveState(GameState):
                         return GameState(self.towers, False)
                     case pygame.K_r:
                         return RecursiveSolveState(
-                            self.fresh_towers(),
+                            self.fresh_towers(self.total_disks()),
                             False,
-                            GameState(self.fresh_towers(), False).hanoi_recursive(),
+                            GameState(
+                                self.fresh_towers(self.total_disks()), False
+                            ).hanoi_recursive(),
                         )
                     case pygame.K_i:
                         return IterativeSolveState(
-                            self.fresh_towers(),
+                            self.fresh_towers(self.total_disks()),
                             False,
-                            GameState(self.fresh_towers(), False).hanoi_iterative(),
+                            GameState(
+                                self.fresh_towers(self.total_disks()), False
+                            ).hanoi_iterative(),
                         )
                     case pygame.K_F1:
                         return HelpState(
                             self.towers,
                             False,
-                            "r - Recursive solve ; i - Iterative solve ;",
+                            "r - Recursive solve\ni - Iterative solve\nESC - Go back\nF1 - Help menu",
+                            self,
                         )
         return self
 
@@ -288,7 +370,6 @@ class RecursiveSolveState(GameState):
     history: list[GameState]
 
     def poll(self):
-        print("RecursiveSolveState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -301,7 +382,7 @@ class RecursiveSolveState(GameState):
     def next(self):
         pygame.time.wait(1000)
         if len(self.history) == 0:
-            return GameState(self.towers, False)
+            return RestartState(self.towers, False)
         return RecursiveSolveState(self.history[0].towers, False, self.history[1:])
 
 
@@ -310,7 +391,6 @@ class IterativeSolveState(GameState):
     history: list[GameState]
 
     def poll(self):
-        print("IterativeSolveState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -323,7 +403,7 @@ class IterativeSolveState(GameState):
     def next(self):
         pygame.time.wait(1000)
         if len(self.history) == 0:
-            return GameState(self.towers, False)
+            return RestartState(self.towers, False)
         return IterativeSolveState(self.history[0].towers, False, self.history[1:])
 
 
@@ -332,7 +412,6 @@ class MoveState(GameState):
     selected_tower: int
 
     def poll(self):
-        print("MoveState", self.selected_tower, self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -360,6 +439,7 @@ class MoveState(GameState):
                         return HelpState(
                             self.towers,
                             False,
-                            "space - Select ; left - Move left ; right - Move right ;",
+                            "space - Select\nleft - Move left\nright - Move right",
+                            self,
                         )
         return self
