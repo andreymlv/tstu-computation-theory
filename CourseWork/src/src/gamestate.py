@@ -298,6 +298,7 @@ class HelpState(GameState):
 @dataclass()
 class SelectState(GameState):
     selected_tower: int
+    to_tower: int
 
     def poll(self):
         for event in pygame.event.get():
@@ -306,17 +307,23 @@ class SelectState(GameState):
             if event.type == pygame.KEYDOWN:
                 match event.key:
                     case pygame.K_SPACE:
-                        return MoveState(self.towers, False, self.selected_tower)
+                        return MoveState(
+                            self.move(self.selected_tower, self.to_tower).towers,
+                            False,
+                            self.to_tower,
+                        )
                     case pygame.K_a | pygame.K_LEFT | pygame.K_h:
                         return SelectState(
                             self.towers,
                             False,
+                            self.selected_tower,
                             (self.selected_tower - 1) % len(self.towers),
                         )
                     case pygame.K_d | pygame.K_RIGHT | pygame.K_l:
                         return SelectState(
                             self.towers,
                             False,
+                            self.selected_tower,
                             (self.selected_tower + 1) % len(self.towers),
                         )
                     case pygame.K_F1:
@@ -422,7 +429,9 @@ class MoveState(GameState):
                     case pygame.K_SPACE:
                         if len(self.towers[self.selected_tower].disks) == 0:
                             return self
-                        return SelectState(self.towers, False, self.selected_tower)
+                        return SelectState(
+                            self.towers, False, self.selected_tower, self.selected_tower
+                        )
                     case pygame.K_a | pygame.K_LEFT | pygame.K_h:
                         return MoveState(
                             self.towers,
