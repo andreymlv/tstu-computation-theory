@@ -1,4 +1,5 @@
 import colorama
+
 from game.landscapes.landscape import Landscape
 
 

@@ -1,4 +1,5 @@
 from typing import NamedTuple, Self
+
 from game.state.gamestate import GameState
 
 

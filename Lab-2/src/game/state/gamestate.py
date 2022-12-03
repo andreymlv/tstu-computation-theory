@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
-import colorama
 
+import colorama
 import keyboard
 
 from game.display.field import Field

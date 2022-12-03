@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from game.display.position import Position
 from game.interface.drawable import Drawable
 from game.landscapes.landscape import Landscape
+from game.units.base import Base
 from game.units.blank import Blank
 from game.units.cursor import Cursor
-from game.units.base import Base
 
 
 @dataclass()

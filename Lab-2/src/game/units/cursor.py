@@ -1,4 +1,5 @@
 import colorama
+
 from game.interface.drawable import Drawable
 
 
