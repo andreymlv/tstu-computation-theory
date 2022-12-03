@@ -1,6 +1,7 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 from random import randint
+from math import log
 
 import pygame
 
@@ -57,42 +58,51 @@ class GameState:
         return self
 
     def render(self) -> None:
-        screen_size = Size(800, 600)
+        screen_size = Size(1280, 720)
         backgroud_color = pygame.Color((255, 255, 255))
         tower_color = pygame.Color((255, 0, 0))
         disk_color = pygame.Color((0, 255, 0))
-        max_disks = len(self.fresh_towers()[0].disks)
+        max_disks = self.total_disks()
         first_tower_x = screen_size.width / len(self.towers) / 4
         first_disk_x = screen_size.width / len(self.towers) / 8
+        tower_width = first_disk_x * 2
         max_width_disk = 2 * first_disk_x + first_tower_x
         window = pygame.display.set_mode(screen_size)
         window.fill(backgroud_color)
         towers_rects: list[pygame.Rect] = []
         disks_rects: list[pygame.Rect] = []
         for i, tower in enumerate(self.towers):
+            tower_size = Size(tower_width, screen_size.height)
+            tower_position = Position(
+                first_tower_x + screen_size.width / len(self.towers) * i,
+                screen_size.height / 3,
+            )
             towers_rects.append(
                 tower.draw(
-                    Position(
-                        first_tower_x + screen_size.width / len(self.towers) * i,
-                        screen_size.height / 3,
-                    ),
-                    Size(first_tower_x * 2, screen_size.height),
+                    tower_position,
+                    tower_size,
                 )
             )
             for j, disk in enumerate(tower.disks):
-                position = Position(
-                    first_disk_x + screen_size.width / max_disks * i,
-                    100 * disk.weight,
+                disk_size = Size(
+                    max_width_disk / log(max_disks + 1, disk.weight + 1),
+                    screen_size.height / max_disks,
                 )
-                disk_size = Size(max_width_disk / (j + 1), 100)
+                center_of_tower = Position(
+                    tower_position.x + tower_size.width / 2, tower_position.y
+                )
+                position = Position(
+                    center_of_tower.x - disk_size.width / 2,
+                    screen_size.height / max_disks * (disk.weight - 1),
+                )
                 print(disk, position, disk_size)
                 disks_rects.append(disk.draw(position, disk_size))
         for tower in towers_rects:
             pygame.draw.rect(window, tower_color, tower)
         for disk in disks_rects:
-            pygame.draw.rect(window, random_color(), disk)
+            pygame.draw.rect(window, disk_color, disk)
         pygame.display.update()
-        pygame.time.Clock().tick(1)
+        pygame.time.Clock().tick(30)
 
     def move(self, from_tower: int, to_tower: int):
         if self.can_move(from_tower, to_tower):
@@ -116,7 +126,7 @@ class GameState:
             )
 
         steps: list[tuple[int, int]] = strategy(
-            len(self.towers[0].disks), 0, len(self.towers) - 1, 1
+            self.total_disks(), 0, len(self.towers) - 1, 1
         )
         history: list = [self]
         for step in steps:
@@ -130,7 +140,7 @@ class GameState:
             else:
                 return last_state.step((target, source))
 
-        disks: int = len(self.towers[0].disks)
+        disks: int = self.total_disks()
         source: int = 0
         target: int = len(self.towers) - 1
         temp: int = 1
@@ -162,21 +172,19 @@ class GameState:
             self.towers[from_tower].last()
         )
 
+    def total_disks(self) -> int:
+        return len(flat_map(lambda id: id, map(lambda tower: tower.disks, self.towers)))
+
     def fresh_towers(self) -> list[Tower]:
-        disks: int = len(
-            flat_map(
-                lambda id: id,
-                map(lambda tower: tower.disks, self.towers),
-            )
-        )
         towers: list[Tower] = list(map(lambda _: Tower([]), range(len(self.towers))))
-        towers[0].disks = list(map(lambda x: Disk(x), range(disks, 0, -1)))
+        towers[0].disks = list(map(lambda x: Disk(x), range(self.total_disks(), 0, -1)))
         return towers
 
 
 @dataclass()
 class RestartState(GameState):
     def poll(self):
+        print("RestartState", self.towers)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return GameState(self.towers, True)
@@ -291,7 +299,7 @@ class RecursiveSolveState(GameState):
         return self
 
     def next(self):
-        # pygame.time.wait(1000)
+        pygame.time.wait(1000)
         if len(self.history) == 0:
             return GameState(self.towers, False)
         return RecursiveSolveState(self.history[0].towers, False, self.history[1:])
@@ -313,7 +321,7 @@ class IterativeSolveState(GameState):
         return self
 
     def next(self):
-        # pygame.time.wait(1000)
+        pygame.time.wait(1000)
         if len(self.history) == 0:
             return GameState(self.towers, False)
         return IterativeSolveState(self.history[0].towers, False, self.history[1:])
