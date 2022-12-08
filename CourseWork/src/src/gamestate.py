@@ -186,14 +186,11 @@ class GameState:
         return towers
 
     def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers}"
+        return ""
 
 
 @dataclass()
 class ChangeDiskCountState(GameState):
-    def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers}"
-
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -224,9 +221,6 @@ class ChangeDiskCountState(GameState):
 
 @dataclass()
 class ChangeTowerCountState(GameState):
-    def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers}"
-
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -257,9 +251,6 @@ class ChangeTowerCountState(GameState):
 
 @dataclass()
 class RestartState(GameState):
-    def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers}"
-
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -286,7 +277,7 @@ class HelpState(GameState):
     caller: GameState
 
     def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers} {self.help_text} {self.caller.__class__.__name__}"
+        return f"{self.help_text} {self.caller.__class__.__name__}"
 
     def poll(self):
         for event in pygame.event.get():
@@ -316,7 +307,56 @@ class SelectState(GameState):
     to_tower: int
 
     def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers}\n{self.selected_tower} to {self.to_tower}"
+        return f"{self.selected_tower} to {self.to_tower}"
+
+    def render(self) -> None:
+        backgroud_color = pygame.Color((130, 130, 130))
+        screen_size = Size(1920, 1080)
+        window = pygame.display.set_mode(screen_size)
+        window.fill(backgroud_color)
+        tower_color = pygame.Color((200, 50, 50))
+        disk_color = pygame.Color((50, 200, 50))
+        max_disks = self.total_disks()
+        first_tower_x = screen_size.width / len(self.towers) / 3
+        max_width_disk = 2 * first_tower_x
+        towers_rects: list[pygame.Rect] = []
+        disks_rects: list[pygame.Rect] = []
+        for i, tower in enumerate(self.towers):
+            tower_size = Size(
+                max_width_disk / log(max_disks + 1, 2), screen_size.height
+            )
+            tower_position = Position(
+                first_tower_x + screen_size.width / len(self.towers) * i,
+                0,
+            )
+            center_of_tower = Position(
+                tower_position.x + tower_size.width / 2, tower_position.y
+            )
+            towers_rects.append(
+                tower.draw(
+                    tower_position,
+                    tower_size,
+                )
+            )
+            for j, disk in enumerate(tower.disks):
+                disk_size = Size(
+                    max_width_disk / log(max_disks + 1, disk.weight + 1),
+                    screen_size.height / max_disks,
+                )
+                disk_position = Position(
+                    center_of_tower.x - disk_size.width / 2,
+                    screen_size.height - disk_size.height * (j + 1),
+                )
+                disks_rects.append(disk.draw(disk_position, disk_size))
+        for i, tower in enumerate(towers_rects):
+            if i == self.selected_tower:
+                pygame.draw.rect(window, pygame.Color(20, 20, 123), tower)
+            elif i == self.to_tower:
+                pygame.draw.rect(window, pygame.Color(20, 123, 123), tower)
+            else:
+                pygame.draw.rect(window, tower_color, tower)
+        for disk in disks_rects:
+            pygame.draw.rect(window, disk_color, disk)
 
     def poll(self):
         for event in pygame.event.get():
@@ -356,9 +396,6 @@ class SelectState(GameState):
 
 @dataclass()
 class SolveState(GameState):
-    def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers}"
-
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -398,7 +435,7 @@ class RecursiveSolveState(GameState):
     history: list[GameState]
 
     def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers} {self.history}"
+        return f"{self.history}"
 
     def poll(self):
         for event in pygame.event.get():
@@ -422,7 +459,7 @@ class IterativeSolveState(GameState):
     history: list[GameState]
 
     def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers} {self.history}"
+        return f"{self.history}"
 
     def poll(self):
         for event in pygame.event.get():
@@ -446,7 +483,54 @@ class MoveState(GameState):
     selected_tower: int
 
     def log(self) -> str:
-        return f"{self.__class__.__name__} {self.towers} {self.selected_tower}"
+        return f"{self.selected_tower}"
+
+    def render(self) -> None:
+        backgroud_color = pygame.Color((130, 130, 130))
+        screen_size = Size(1920, 1080)
+        window = pygame.display.set_mode(screen_size)
+        window.fill(backgroud_color)
+        tower_color = pygame.Color((200, 50, 50))
+        disk_color = pygame.Color((50, 200, 50))
+        max_disks = self.total_disks()
+        first_tower_x = screen_size.width / len(self.towers) / 3
+        max_width_disk = 2 * first_tower_x
+        towers_rects: list[pygame.Rect] = []
+        disks_rects: list[pygame.Rect] = []
+        for i, tower in enumerate(self.towers):
+            tower_size = Size(
+                max_width_disk / log(max_disks + 1, 2), screen_size.height
+            )
+            tower_position = Position(
+                first_tower_x + screen_size.width / len(self.towers) * i,
+                0,
+            )
+            center_of_tower = Position(
+                tower_position.x + tower_size.width / 2, tower_position.y
+            )
+            towers_rects.append(
+                tower.draw(
+                    tower_position,
+                    tower_size,
+                )
+            )
+            for j, disk in enumerate(tower.disks):
+                disk_size = Size(
+                    max_width_disk / log(max_disks + 1, disk.weight + 1),
+                    screen_size.height / max_disks,
+                )
+                disk_position = Position(
+                    center_of_tower.x - disk_size.width / 2,
+                    screen_size.height - disk_size.height * (j + 1),
+                )
+                disks_rects.append(disk.draw(disk_position, disk_size))
+        for i, tower in enumerate(towers_rects):
+            if i == self.selected_tower:
+                pygame.draw.rect(window, pygame.Color(20, 20, 123), tower)
+            else:
+                pygame.draw.rect(window, tower_color, tower)
+        for disk in disks_rects:
+            pygame.draw.rect(window, disk_color, disk)
 
     def poll(self):
         for event in pygame.event.get():
