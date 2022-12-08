@@ -31,6 +31,7 @@ def main() -> None:
     )
     init()
     while not game.state.over:
+        print(game.log())
         game.render()
         pygame.display.update()
         pygame.time.Clock().tick(60)

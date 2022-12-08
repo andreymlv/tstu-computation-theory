@@ -14,3 +14,6 @@ class Game(NamedTuple):
 
     def next(self):
         return Game(self.state.next())
+
+    def log(self) -> str:
+        return self.state.log()

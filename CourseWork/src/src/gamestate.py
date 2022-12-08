@@ -185,9 +185,15 @@ class GameState:
         towers[0].disks = list(map(lambda x: Disk(x), range(disks, 0, -1)))
         return towers
 
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers}"
+
 
 @dataclass()
 class ChangeDiskCountState(GameState):
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers}"
+
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -218,6 +224,9 @@ class ChangeDiskCountState(GameState):
 
 @dataclass()
 class ChangeTowerCountState(GameState):
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers}"
+
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -248,6 +257,9 @@ class ChangeTowerCountState(GameState):
 
 @dataclass()
 class RestartState(GameState):
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers}"
+
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -272,6 +284,9 @@ class RestartState(GameState):
 class HelpState(GameState):
     help_text: str
     caller: GameState
+
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers} {self.help_text} {self.caller.__class__.__name__}"
 
     def poll(self):
         for event in pygame.event.get():
@@ -300,6 +315,9 @@ class SelectState(GameState):
     selected_tower: int
     to_tower: int
 
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers}\n{self.selected_tower} to {self.to_tower}"
+
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -317,14 +335,14 @@ class SelectState(GameState):
                             self.towers,
                             False,
                             self.selected_tower,
-                            (self.selected_tower - 1) % len(self.towers),
+                            (self.to_tower - 1) % len(self.towers),
                         )
                     case pygame.K_d | pygame.K_RIGHT | pygame.K_l:
                         return SelectState(
                             self.towers,
                             False,
                             self.selected_tower,
-                            (self.selected_tower + 1) % len(self.towers),
+                            (self.to_tower + 1) % len(self.towers),
                         )
                     case pygame.K_F1:
                         return HelpState(
@@ -338,6 +356,9 @@ class SelectState(GameState):
 
 @dataclass()
 class SolveState(GameState):
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers}"
+
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -376,6 +397,9 @@ class SolveState(GameState):
 class RecursiveSolveState(GameState):
     history: list[GameState]
 
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers} {self.history}"
+
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -397,6 +421,9 @@ class RecursiveSolveState(GameState):
 class IterativeSolveState(GameState):
     history: list[GameState]
 
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers} {self.history}"
+
     def poll(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -417,6 +444,9 @@ class IterativeSolveState(GameState):
 @dataclass()
 class MoveState(GameState):
     selected_tower: int
+
+    def log(self) -> str:
+        return f"{self.__class__.__name__} {self.towers} {self.selected_tower}"
 
     def poll(self):
         for event in pygame.event.get():
