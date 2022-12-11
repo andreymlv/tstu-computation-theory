@@ -16,4 +16,6 @@ class Game(NamedTuple):
         return Game(self.state.next())
 
     def log(self) -> str:
-        return f"{self.state.__class__.__name__} {self.state.towers} " + self.state.log()
+        return (
+            f"{self.state.__class__.__name__} {self.state.towers} " + self.state.log()
+        )
