@@ -12,7 +12,10 @@ class TestBase(TestCase):
         self.assertEqual(base_empty.produce(warrior), Base(True, 10, [warrior]))
         base_full = Base(True, 2, [warrior])
         self.assertEqual(base_full.produce(warrior), Base(False, 2, [warrior, warrior]))
-        self.assertEqual(base_full.produce(warrior).produce(warrior), Base(False, 2, [warrior, warrior]))
+        self.assertEqual(
+            base_full.produce(warrior).produce(warrior),
+            Base(False, 2, [warrior, warrior]),
+        )
 
     def test_is_crushed(self):
         base = Base(True, 10, [Melee(10, 10, 10, Sword(10, 10, 10))])

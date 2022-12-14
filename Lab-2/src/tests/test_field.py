@@ -83,7 +83,9 @@ class TestField(TestCase):
     def test_swap_cell(self):
         new = self.field.swap_cell(Position(3, 3), Position(3, 2))
         self.assertEqual(new.cells[3][3].unit.draw(), Blank().draw())
-        self.assertEqual(new.cells[3][2].unit.draw(), Melee(10, 10, 10, Sword(10, 10, 1)).draw())
+        self.assertEqual(
+            new.cells[3][2].unit.draw(), Melee(10, 10, 10, Sword(10, 10, 1)).draw()
+        )
 
     def test_is_inside(self):
         self.assertTrue(self.field.is_inside(Position(0, 0)))
